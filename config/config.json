@@ -1,0 +1,10 @@
+{
+  "host": "govsso-mock.test",
+  "serverPort": "10443",
+  "baseHref": "/",
+  "tlsCertificate": "config/tls/govsso-mock/govsso-mock.test.crt",
+  "tlsPrivateKey": "config/tls/govsso-mock/govsso-mock.test.key",
+  "idTokenSignPrivateKeyPath": "config/id-token/idTokenSign.key",
+  "idTokenSignPublicKeyPath": "config/id-token/idTokenSign.pub",
+  "idTokenSignKeyId": "govsso-mock"
+}

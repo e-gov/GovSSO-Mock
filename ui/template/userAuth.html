@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GovSSO Mock</title>
+
+    <link rel="stylesheet" href="/assets/bootstrap.min.css">
+
+    <script type="text/javascript" src="/assets/auth-script.js"></script>
+</head>
+
+<body>
+<div class="container mt-4 mb-5">
+    <p>GovSSO mock serves <a href="https://e-gov.github.io/GOVSSO/TechnicalSpecification">GovSSO protocol</a> to clients.</p>
+</div>
+
+<div class="container mb-3">
+    <h3 class="mb-4">Authentication request</h3>
+    <div class="row">
+        <div class="col">
+            <fieldset class="form-group px-5">
+                <div class="row">
+                    <div class="col-sm-9">
+                        {{range $i, $user := .PredefinedUsers}}
+                        <div class="form-check mb-4">
+                            <label class="form-check-label">
+                                <input id="user-selection-{{ $i }}"
+                                       class="form-check-input" type="radio" name="user"
+                                       onclick="fillAuthenticationForm({{.}});"/>
+                                {{ $user.Subject }} <br>
+                                {{ $user.GivenName }} {{ $user.FamilyName }}, {{ $user.Birthdate }}, {{ $user.Amr }}, {{
+                                $user.Acr }}
+                            </label>
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+            </fieldset>
+            <div class="container mt-5">
+                <span>response_type = <b>{{ .Request.ResponseType }}</b></span><br>
+                <span>client_id = <b>{{ .Request.ClientId }}</b></span><br>
+                <span>scope = <b>{{ .Request.Scope }}</b></span><br>
+                <span>state = <b>{{ .Request.State }}</b></span><br>
+                <span>nonce = <b>{{ .Request.Nonce }}</b></span><br>
+                <span>redirect_uri = <b>{{ .Request.RedirectUri }}</b></span><br>
+                <span>ui_locales = <b>{{ .Request.UILocales }}</b></span><br>
+                <span>acr_values = <b>{{ .Request.AcrValues }}</b></span><br>
+            </div>
+        </div>
+        <div class="col">
+            <form action="/oauth2/auth" method="POST">
+                <input type="hidden" id="response_type" name="response_type"
+                       value="{{ .Request.ResponseType }}">
+                <input type="hidden" id="client_id" name="client_id"
+                       value="{{ .Request.ClientId }}">
+                <input type="hidden" id="scope" name="scope"
+                       value="{{ .Request.Scope }}">
+                <input type="hidden" id="state" name="state"
+                       value="{{ .Request.State }}">
+                <input type="hidden" id="nonce" name="nonce"
+                       value="{{ .Request.Nonce }}">
+                <input type="hidden" id="redirect_uri" name="redirect_uri"
+                       value="{{ .Request.RedirectUri }}">
+
+                <div class="form-group row mb-2">
+                    <label for="subject" class="col-sm-3 col-form-label">Identifier (sub)</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="subject" name="subject" size="11"
+                               placeholder="e.g. EE38001085718" required>
+                    </div>
+                </div>
+                <div class="form-group row mb-2">
+                    <label for="given_name" class="col-sm-3 col-form-label">Given name</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="given_name" name="given_name"
+                               placeholder="e.g. Jaak-Kristjan" required>
+                    </div>
+                </div>
+                <div class="form-group row mb-2">
+                    <label for="family_name" class="col-sm-3 col-form-label">Family name</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="family_name" name="family_name"
+                               placeholder="e.g. Jõeorg" required>
+                    </div>
+                </div>
+                <div class="form-group row mb-2">
+                    <label for="birthdate" class="col-sm-3 col-form-label">Birthdate</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="birthdate" name="birthdate"
+                               placeholder="e.g. 1980-01-08" required>
+                    </div>
+                </div>
+                <div class="container mt-3 mb-3">
+                    <div class="row">
+                        <div class="col">
+                            <fieldset class="form-group mb-2">
+                                <div class="row">
+                                    <legend class="col-form-label col-sm-3 pt-0">Auth method (amr)</legend>
+                                    <div class="col-sm-9">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="amr" id="idcard"
+                                                   value="idcard" checked>
+                                            <label class="form-check-label" for="idcard">idcard</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="amr" id="mID"
+                                                   value="mID">
+                                            <label class="form-check-label" for="mID">mID</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="amr" id="smartid"
+                                                   value="smartid">
+                                            <label class="form-check-label" for="smartid">smartid</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="amr" id="eIDAS"
+                                                   value="eIDAS">
+                                            <label class="form-check-label" for="eIDAS">eIDAS</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col">
+                            <fieldset class="form-group mb-2">
+                                <div class="row">
+                                    <legend class="col-form-label col-sm-3 pt-0">Auth context class (acr)</legend>
+                                    <div class="col-sm-9">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="acr" id="acr-high"
+                                                   value="high" checked>
+                                            <label class="form-check-label" for="acr-high">high</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="acr" id="acr-substantial"
+                                                   value="substantial">
+                                            <label class="form-check-label" for="acr-substantial">substantial</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="acr" id="acr-low"
+                                                   value="low">
+                                            <label class="form-check-label" for="acr-low">low</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mt-4">
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn btn-primary">Authenticate</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

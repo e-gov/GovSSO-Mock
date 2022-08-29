@@ -1,0 +1,26 @@
+[
+  {
+    "sub": "EE38001085718",
+    "given_name": "Jaak-Kristjan",
+    "family_name": "Jõeorg",
+    "birthdate": "1980-01-08",
+    "amr": "idcard",
+    "acr": "high"
+  },
+  {
+    "sub": "EE47101010033",
+    "given_name": "Mari-Liis",
+    "family_name": "Männik",
+    "birthdate": "1971-01-01",
+    "amr": "mID",
+    "acr": "low"
+  },
+  {
+    "sub": "EE37101010021",
+    "given_name": "Igor",
+    "family_name": "Žaikovski",
+    "birthdate": "1971-01-01",
+    "amr": "smartid",
+    "acr": "substantial"
+  }
+]

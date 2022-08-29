@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  govsso-mock:
+    build:
+      context: .
+      dockerfile: build/Dockerfile
+    image: govsso-mock
+    networks:
+      default:
+        aliases:
+          - govsso-mock.test
+    ports:
+      - "10443:10443"
+    volumes:
+      - ./config:/govsso-mock/config:ro
+
+  client:
+    image: govsso-client:latest
+    entrypoint: bash -c 'sleep 5 && /cnb/process/web'
+    deploy:
+      resources:
+        limits:
+          memory: 650M
+    environment:
+      - server.port=11443
+      - spring.application.name=Client
+      - spring.security.oauth2.client.registration.govsso.client-id=example-client-id
+      - spring.security.oauth2.client.registration.govsso.client-secret=secret-a
+      - spring.security.oauth2.client.provider.govsso.issuer-uri=https://govsso-mock.test:10443/
+      - govsso.public-url=https://client.test:11443
+      - server.ssl.key-store-type=PKCS12
+      - server.ssl.key-store=/var/certs/client.test.keystore.p12
+      - server.ssl.key-store-password=changeit
+      - server.ssl.trust-store=/var/certs/client.test.truststore.p12
+      - server.ssl.trust-store-password=changeit
+      - BPL_JVM_THREAD_COUNT=10
+    networks:
+      default:
+        aliases:
+          - client.test
+    ports:
+      - '11443:11443'
+    restart: unless-stopped
+    volumes:
+      - ./config/tls/client/client.test.keystore.p12:/var/certs/client.test.keystore.p12:ro
+      - ./config/tls/client/client.test.truststore.p12:/var/certs/client.test.truststore.p12:ro

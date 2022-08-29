@@ -1,0 +1,6 @@
+[
+  {
+    "client_id": "example-client-id",
+    "backchannel_logout_uri": "https://client.test:11443/backchannellogout"
+  }
+]

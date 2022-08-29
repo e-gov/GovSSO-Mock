@@ -1,0 +1,13 @@
+# Ignore everything
+*
+
+# But not these files...
+!.gitignore
+!generate-ca-certificate.sh
+!generate-certificate.sh
+!generate-tls-resources.sh
+!generate-truststore.sh
+!openssl.cnf
+
+# ...even if they are in subdirectories
+!*/

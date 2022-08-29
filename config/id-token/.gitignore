@@ -1,0 +1,9 @@
+# Ignore everything
+*
+
+# But not these files...
+!.gitignore
+!generate-id-token-signing-keys.sh
+
+# ...even if they are in subdirectories
+!*/
