@@ -1,46 +1,18 @@
 # GovSSO Mock
 
-## Prerequisites for development
+GovSSO mock is an application that serves [GovSSO protocol](https://e-gov.github.io/GOVSSO/TechnicalSpecification) to
+clients. Its main use cases are:
 
-* Golang version 1.19+ (might also work with older versions)
+* Enable client applications to develop and test integration with GovSSO protocol. Compared to GovSSO service demo
+  environment, mock can be used without needing registration and can also be used offline or in closed networks.
+* Provide mock authentication data in development and test environments. Compared to GovSSO service demo environment,
+  mock can return arbitrary user data to client and is also simpler to use with automated tests.
 
-## Building Dependencies
+Currently GovSSO mock returns protocol-compliant responses for all successful flows. Validating input data and
+simulating error conditions should be considered for future development.
 
-1. Follow [GOVSSO-Client/README.md](https://github.com/e-gov/GOVSSO-Client#running-in-docker) to build its Docker image
-2. Generate required resources (TLS certificates, id-token signing keys)
-   NB! By default, generates TLS certificates for '*.test' subdomains. Can be modified in './config/tls/generate-tls-resources.sh' script.
-   ```shell
-   cd ./config
-   ./generate-resources.sh
-   ```
+## Documentation
 
-## Running in Docker Compose
-
-1. Run in docker compose
-   ```shell
-   docker compose up
-   ```
-2. Rebuild GovSSO Mock image and run in docker compose
-   ```shell
-   docker compose up --build
-   ```
-
-## Endpoints
-
-* GovSSO Mock
-    * https://govsso-mock.test:10443/
-    * https://govsso-mock.test:10443/.well-known/openid-configuration
-    * https://govsso-mock.test:10443/.well-known/jwks.json
-    * https://govsso-mock.test:10443/oauth2/auth
-    * https://govsso-mock.test:10443/oauth2/token
-    * https://govsso-mock.test:10443/oauth2/sessions/logout
-    * https://govsso-mock.test:10443/backchannel/sessions/logout
-* Example Client
-    * https://client.test:11443/ - UI
-    * https://client.test:11443/actuator - maintenance endpoints
-
-## Configuration
-
-[//]: # (TODO: clients.json)
-[//]: # (TODO: config.json)
-[//]: # (TODO: users.json)
+* [DEPLOYMENT.md](DEPLOYMENT.md) – guide for building, running, and configuring GovSSO mock.
+* [USAGE.md](USAGE.md) – guide for testing all usage flows with GovSSO mock.
+* [ARCHITECTURE.md](ARCHITECTURE.md) – description of GovSSO mock internals and possible future development.
