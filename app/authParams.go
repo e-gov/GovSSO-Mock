@@ -8,7 +8,9 @@ type authParams struct {
 	givenName  string
 	familyName string
 	nonce      string
+	scope      string
 	state      string
 	subject    string
 	sessionId  *string
+	phone      string
 }

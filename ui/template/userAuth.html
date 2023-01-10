@@ -13,7 +13,8 @@
 
 <body>
 <div class="container mt-4 mb-5">
-    <p>GovSSO mock serves <a href="https://e-gov.github.io/GOVSSO/TechnicalSpecification">GovSSO protocol</a> to clients.</p>
+    <p>GovSSO mock serves <a href="https://e-gov.github.io/GOVSSO/TechnicalSpecification">GovSSO protocol</a> to
+        clients.</p>
 </div>
 
 <div class="container mb-3">
@@ -31,7 +32,7 @@
                                        onclick="fillAuthenticationForm({{.}});"/>
                                 {{ $user.Subject }} <br>
                                 {{ $user.GivenName }} {{ $user.FamilyName }}, {{ $user.Birthdate }}, {{ $user.Amr }}, {{
-                                $user.Acr }}
+                                $user.Acr }}{{if $user.Phone}}, {{ $user.Phone }}{{end}}
                             </label>
                         </div>
                         {{end}}
@@ -92,6 +93,15 @@
                                placeholder="e.g. 1980-01-08" required>
                     </div>
                 </div>
+                {{if .isPhoneScope }}
+                <div class="form-group row mb-2">
+                    <label for="phone" class="col-sm-3 col-form-label">Phone</label>
+                    <div class="col-sm-9">
+                        <input type="tel" class="form-control" id="phone" name="phone"
+                               placeholder="e.g. +37268000769">
+                    </div>
+                </div>
+                {{end}}
                 <div class="container mt-3 mb-3">
                     <div class="row">
                         <div class="col">
@@ -152,7 +162,9 @@
                 <div class="form-group row mt-4">
                     <div class="col-sm-10">
                         <button type="submit" class="btn btn-primary">Authenticate</button>
-                        <button type="submit" class="btn btn-primary" formaction="/oauth2/cancel">Cancel authentication</button>
+                        <button type="submit" class="btn btn-primary" formaction="/oauth2/cancel">Cancel
+                            authentication
+                        </button>
                     </div>
                 </div>
             </form>

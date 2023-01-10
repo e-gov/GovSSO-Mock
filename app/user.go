@@ -7,4 +7,5 @@ type user struct {
 	Birthdate  string `json:"birthdate"`
 	Amr        string `json:"amr"`
 	Acr        string `json:"acr"`
+	Phone      string `json:"phone"`
 }
