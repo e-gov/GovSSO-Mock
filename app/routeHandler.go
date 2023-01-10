@@ -30,6 +30,7 @@ func (this *routeHandler) init() error {
 	router.GET("/.well-known/jwks.json", this.displayJwks)
 	router.GET("/oauth2/auth", this.handleAuthGet)
 	router.POST("/oauth2/auth", this.handleAuthPost)
+	router.POST("/oauth2/cancel", this.handleAuthCancel)
 	router.POST("/oauth2/token", this.handleAuthTokenGeneration)
 	router.GET("/oauth2/sessions/logout", this.handleSessionLogout)
 	router.POST("/backchannel/sessions/logout", this.handleBackchannelSessionLogout)
