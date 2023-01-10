@@ -17,6 +17,8 @@ func (this *routeHandler) handleAuthPost(c *gin.Context) {
 		nonce:      c.PostForm("nonce"),
 		state:      c.PostForm("state"),
 		subject:    c.PostForm("subject"),
+		scope:      c.PostForm("scope"),
+		phone:      c.PostForm("phone"),
 	})
 
 	c.Redirect(http.StatusFound, fmt.Sprintf("%s?state=%s&code=%s",

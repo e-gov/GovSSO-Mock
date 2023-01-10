@@ -1,4 +1,4 @@
-window.onload = function(e){
+window.onload = function (e) {
     selectFirstUser();
 }
 
@@ -11,6 +11,11 @@ function fillAuthenticationForm(user) {
     document.getElementById("given_name").value = user.given_name;
     document.getElementById("family_name").value = user.family_name;
     document.getElementById("birthdate").value = user.birthdate;
+
+    let phone = document.getElementById("phone")
+    if (phone) {
+        phone.value = user.phone;
+    }
 
     changeRadioSelection("acr", user.acr);
     changeRadioSelection("amr", user.amr);

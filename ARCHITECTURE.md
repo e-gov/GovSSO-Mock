@@ -49,6 +49,8 @@ GovSSO mock serves additional HTTP response headers analogous to real GovSSO ser
     * Issue ID Tokens and Logout Tokens that don’t pass different security checks that are listed in GovSSO protocol
       specification. Token payload could be allowed to be freely edited in GovSSO mock UI.
     * Issue TLS certificates that don’t pass different security checks.
+* Support cancelling authentication flow with user_cancel error code when this is added to GovSSO protocol
+  specification.
 * Support phone scope and phone_number, phone_number_verified claims when this is added to GovSSO protocol
   specification.
 * Optimize Docker image (use multi-stage build to reduce resulting image size).

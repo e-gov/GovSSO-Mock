@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
 	"net/http"
+	"strings"
 )
 
 func (this *routeHandler) handleAuthGet(c *gin.Context) {
@@ -30,7 +31,18 @@ func (this *routeHandler) handleAuthGet(c *gin.Context) {
 			"AcrValues":    c.Query("acr_values"),
 		},
 		"PredefinedUsers": this.predefinedUsers,
+		"isPhoneScope":    isPhoneScope(c.Query("scope")),
 	})
+
+}
+
+func isPhoneScope(s string) bool {
+	for _, v := range strings.Split(s, " ") {
+		if v == "phone" {
+			return true
+		}
+	}
+	return false
 }
 
 func (this *routeHandler) authenticateByIdTokenHintWithoutAuthForm(c *gin.Context) {
@@ -75,7 +87,7 @@ func (this *routeHandler) authenticateBySubjectWithoutAuthForm(c *gin.Context, s
 		params.givenName = user.GivenName
 		params.familyName = user.FamilyName
 		params.subject = user.Subject
-
+		params.phone = user.Phone
 	} else {
 		params.acr = "high"
 		params.amr = "idcard"

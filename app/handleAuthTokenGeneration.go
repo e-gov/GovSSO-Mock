@@ -45,6 +45,11 @@ func (this *routeHandler) initAuthIdTokenClaims(authParams authParams) idtoken.A
 		Subject:    authParams.subject,
 	}
 
+	if len(authParams.phone) != 0 {
+		claims.PhoneNumber = authParams.phone
+		claims.PhoneNumberVerified = "true"
+	}
+
 	if authParams.sessionId == nil {
 		claims.SessionId = uuid.New().String()
 	} else {
