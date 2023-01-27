@@ -21,8 +21,13 @@ func (this *routeHandler) handleAuthPost(c *gin.Context) {
 		phone:      c.PostForm("phone"),
 	})
 
+	redirectUri := c.PostForm("redirect_uri")
+	if len(redirectUri) == 0 {
+		redirectUri = this.findFromPredefinedClients(c.PostForm("client_id")).RedirectUris[0]
+	}
+
 	c.Redirect(http.StatusFound, fmt.Sprintf("%s?state=%s&code=%s",
-		c.PostForm("redirect_uri"),
+		redirectUri,
 		c.PostForm("state"),
 		code))
 }

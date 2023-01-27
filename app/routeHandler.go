@@ -4,6 +4,8 @@ import (
 	"GOVSSO-Mock/app/idtoken"
 	"crypto/rsa"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/go-playground/validator/v10"
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/rs/zerolog/log"
 	"net/http"
@@ -34,6 +36,13 @@ func (this *routeHandler) init() error {
 	router.POST("/oauth2/token", this.handleAuthTokenGeneration)
 	router.GET("/oauth2/sessions/logout", this.handleSessionLogout)
 	router.POST("/backchannel/sessions/logout", this.handleBackchannelSessionLogout)
+
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		v.RegisterStructValidation(this.authRequestValidation, authRequest{})
+		v.RegisterAlias("valid_response_type", "required,eq=code")
+		v.RegisterAlias("valid_scope", "required,oneof=openid 'openid phone' 'phone openid'")
+		v.RegisterAlias("valid_state", "required,min=8")
+	}
 
 	return router.RunTLS(":"+this.config.ServerPort, this.config.TLSCertificate, this.config.TLSPrivateKey)
 }
@@ -103,4 +112,13 @@ func (this *routeHandler) setCorsHeader(c *gin.Context) {
 	origin := c.Request.Header.Get("Origin")
 	c.Header("Access-Control-Allow-Origin", origin)
 	c.Header("Access-Control-Allow-Credentials", "true")
+}
+
+func (this *routeHandler) findFromPredefinedClients(clientId string) *client {
+	for _, client := range this.predefinedClients {
+		if client.ClientId == clientId {
+			return &client
+		}
+	}
+	return nil
 }

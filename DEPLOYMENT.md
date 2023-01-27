@@ -84,3 +84,5 @@ Default deployment is provided with Docker Compose, using domain names client.te
     * client_id – data that is used as aud claim value in issued Logout Token;
     * backchannel_logout_uri – client application’s endpoint URL where client application accepts back-channel logout
       requests.
+    * redirect_uris - list of client application's redirect URL's where client application accepts authorization callbacks
+    * post_logout_redirect_uris - list of client application's redirect URL's where client application accepts logout callbacks
