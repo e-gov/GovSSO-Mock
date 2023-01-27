@@ -2,45 +2,57 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 	"net/http"
 )
 
 func (this *routeHandler) handleSessionLogout(c *gin.Context) {
-	idTokenHint := c.Query("id_token_hint")
-	idTokenClaims, err := this.idTokenService.ParseClaimsFromAuthIdToken(idTokenHint)
+	var request logoutRequest
+	if err := c.ShouldBindQuery(&request); err != nil {
+		handleError(c, request, err, "Invalid logout request", http.StatusBadRequest)
+		return
+	}
+
+	idTokenClaims, err := this.idTokenService.ParseClaimsFromAuthIdToken(request.IdTokenHint)
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to parse claims from auth identity token")
+		handleError(c, request, err, "Failed to parse claims from auth identity token", http.StatusBadRequest)
 		return
 	}
 
 	clientId := idTokenClaims.ClientId[0]
-	logoutToken, err := this.idTokenService.CreateAndSignLogoutToken(clientId, idTokenClaims.SessionId)
-	if err != nil {
-		log.Error().Err(err).Msg("Failed to create and sign logout token")
+	client := this.findFromPredefinedClients(clientId)
+	if client == nil {
+		handleError(c, request, err, "Invalid OIDC client", http.StatusBadRequest)
 		return
 	}
 
-	postLogoutRedirectUri := c.Query("post_logout_redirect_uri")
-	state := c.Query("state")
-	if state != "" {
-		postLogoutRedirectUri += "?state=" + state
+	if !client.isValidPostLogoutRedirectUri(request.PostLogoutRedirectUri) {
+		handleError(c, request, err, "Invalid post logout redirect URI", http.StatusBadRequest)
+		return
 	}
 
-	// If client is present in predefined clients configuration (./config/clients.json),
-	// then also call back-channel logout asynchronously.
-	client := this.findFromPredefinedClients(clientId)
-	if client != nil {
-		go this.backchannelLogout(client.BackchannelLogoutUri, logoutToken, idTokenClaims.SessionId)
+	logoutToken, err := this.idTokenService.CreateAndSignLogoutToken(clientId, idTokenClaims.SessionId)
+	if err != nil {
+		handleError(c, request, err, "Failed to create and sign logout token", http.StatusInternalServerError)
+		return
+	}
+
+	go this.backchannelLogout(client.BackchannelLogoutUri, logoutToken, idTokenClaims.SessionId)
+
+	postLogoutRedirectUri := request.PostLogoutRedirectUri
+	if request.State != "" {
+		postLogoutRedirectUri += "?state=" + request.State
 	}
 	c.Redirect(http.StatusMovedPermanently, postLogoutRedirectUri)
 }
 
-func (this *routeHandler) findFromPredefinedClients(clientId string) *client {
-	for _, client := range this.predefinedClients {
-		if client.ClientId == clientId {
-			return &client
-		}
-	}
-	return nil
+func handleError(c *gin.Context, request logoutRequest, err error, message string, status int) {
+	incidentNr := uuid.New()
+	log.Error().Err(err).Msgf("Invalid logout request: %s Incident nr: %s", request, incidentNr)
+	c.HTML(status, "error.html", gin.H{
+		"error":       "Logout error.",
+		"message":     message,
+		"incident_nr": incidentNr,
+	})
 }

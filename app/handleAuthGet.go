@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
+	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 	"net/http"
 	"strings"
@@ -19,30 +21,66 @@ func (this *routeHandler) handleAuthGet(c *gin.Context) {
 		this.authenticateBySubjectWithoutAuthForm(c, subject)
 	}
 
-	c.HTML(http.StatusOK, "userAuth.html", gin.H{
-		"Request": gin.H{
-			"ClientId":     c.Query("client_id"),
-			"Nonce":        c.Query("nonce"),
-			"RedirectUri":  c.Query("redirect_uri"),
-			"ResponseType": c.Query("response_type"),
-			"Scope":        c.Query("scope"),
-			"State":        c.Query("state"),
-			"UILocales":    c.Query("ui_locales"),
-			"AcrValues":    c.Query("acr_values"),
-		},
-		"PredefinedUsers": this.predefinedUsers,
-		"isPhoneScope":    isPhoneScope(c.Query("scope")),
-	})
-
+	var request authRequest
+	if err := c.ShouldBindQuery(&request); err == nil {
+		c.HTML(http.StatusOK, "userAuth.html", gin.H{
+			"Request":         request,
+			"PredefinedUsers": this.predefinedUsers,
+			"isPhoneScope":    strings.Contains(c.Query("scope"), "phone"),
+		})
+	} else if validationErr, ok := err.(validator.ValidationErrors); ok {
+		incidentNr := uuid.New()
+		log.Error().Err(err).Msgf("Invalid authorization request. Incident nr: %s", incidentNr)
+		handleValidationError(c, validationErr, incidentNr)
+	}
 }
 
-func isPhoneScope(s string) bool {
-	for _, v := range strings.Split(s, " ") {
-		if v == "phone" {
-			return true
-		}
+func handleValidationError(c *gin.Context, verr validator.ValidationErrors, incidentNr uuid.UUID) {
+	validationError := verr[0]
+
+	if validationError.Tag() == "valid_response_type" {
+		c.Redirect(http.StatusFound, fmt.Sprintf("%s?error=unsupported_response_type&"+
+			"error_description=The+authorization+server+does+not+support+obtaining+a+token+using+this+method.+"+
+			"The+client+is+not+allowed+to+request+response_type+'%s'&state=%s",
+			c.Query("redirect_uri"),
+			c.Query("response_type"),
+			c.Query("state")))
+	} else if validationError.Tag() == "valid_scope" {
+		c.Redirect(http.StatusFound, fmt.Sprintf("%s?error=invalid_scope&The+requested+scope+is+invalid,"+
+			"+unknown,+or+malformed.+The+OAuth+2.0+Client+is+not+allowed+to+request+scope+'%s'&state=%s",
+			c.Query("redirect_uri"),
+			c.Query("scope"),
+			c.Query("state")))
+	} else if validationError.Tag() == "valid_state" {
+		c.Redirect(http.StatusFound, fmt.Sprintf("%s?error=invalid_state&The+state+is+missing+or+does+not"+
+			"+have+enough+characters+and+is+therefore+considered+too+weak.+Request+parameter+'state'+must+be"+
+			"+at+least+be+8+characters+long+to+ensure+sufficient+entropy.&state=%s",
+			c.Query("redirect_uri"),
+			c.Query("state")))
+	} else if validationError.Tag() == "valid_client" {
+		c.HTML(http.StatusBadRequest, "error.html", gin.H{
+			"error":       "Authentication error.",
+			"message":     "Invalid OIDC client.",
+			"incident_nr": incidentNr,
+		})
+	} else {
+		c.HTML(http.StatusBadRequest, "error.html", gin.H{
+			"error":       "Authentication error.",
+			"message":     "Invalid OIDC request.",
+			"incident_nr": incidentNr,
+		})
 	}
-	return false
+}
+
+func (this *routeHandler) authRequestValidation(sl validator.StructLevel) {
+	request := sl.Current().Interface().(authRequest)
+	authClient := this.findFromPredefinedClients(request.ClientId)
+
+	if authClient == nil {
+		sl.ReportError(request.ClientId, "client_id", "ClientId", "valid_client", "")
+	} else if !authClient.isValidRedirectUri(request.RedirectUri) {
+		sl.ReportError(request.RedirectUri, "redirect_uri", "RedirectUri", "valid_redirect_uri", "")
+	}
 }
 
 func (this *routeHandler) authenticateByIdTokenHintWithoutAuthForm(c *gin.Context) {

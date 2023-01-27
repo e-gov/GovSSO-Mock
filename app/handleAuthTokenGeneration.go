@@ -10,12 +10,27 @@ import (
 )
 
 func (this *routeHandler) handleAuthTokenGeneration(c *gin.Context) {
-	code := c.PostForm("code")
-	authParams := this.authParamsStore.getParams(code)
+
+	var request tokenRequest
+	if err := c.ShouldBind(&request); err != nil {
+		log.Error().Err(err).Msg("Invalid token request.")
+		c.JSON(http.StatusOK, gin.H{
+			"error":       "invalid_request",
+			"status_code": "400",
+		})
+		return
+	}
+
+	authParams := this.authParamsStore.getParams(request.Code)
 	idTokenClaims := this.initAuthIdTokenClaims(*authParams)
 	idToken, err := this.idTokenService.CreateAndSignAuthIdToken(idTokenClaims)
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to create and sign identity token")
+		c.JSON(http.StatusOK, gin.H{
+			"error":       "server_error",
+			"error_debug": "Failed to create and sign identity token",
+			"status_code": "500",
+		})
 		return
 	}
 
@@ -23,7 +38,8 @@ func (this *routeHandler) handleAuthTokenGeneration(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"access_token": "not-used-in-govsso-mock",
 		"id_token":     idToken,
-		"token_type":   "Bearer",
+		"scope":        "openid",
+		"token_type":   "bearer",
 		"expires_in":   3600,
 	})
 }
