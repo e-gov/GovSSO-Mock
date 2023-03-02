@@ -28,7 +28,7 @@ services:
       - spring.security.oauth2.client.registration.govsso.client-id=example-client-id
       - spring.security.oauth2.client.registration.govsso.client-secret=secret-a
       - spring.security.oauth2.client.provider.govsso.issuer-uri=https://govsso-mock.test:10443/
-      - govsso.public-url=https://client.test:11443
+      - govsso.post-logout-redirect-uri=https://client.test:11443/?show-post-logout-message
       - server.ssl.key-store-type=PKCS12
       - server.ssl.key-store=/var/certs/client.test.keystore.p12
       - server.ssl.key-store-password=changeit
