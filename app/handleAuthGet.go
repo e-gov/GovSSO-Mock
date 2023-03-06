@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 	"net/http"
+	"net/url"
 	"strings"
 )
 
@@ -43,20 +44,20 @@ func handleValidationError(c *gin.Context, verr validator.ValidationErrors, inci
 			"error_description=The+authorization+server+does+not+support+obtaining+a+token+using+this+method.+"+
 			"The+client+is+not+allowed+to+request+response_type+'%s'&state=%s",
 			c.Query("redirect_uri"),
-			c.Query("response_type"),
-			c.Query("state")))
+			url.QueryEscape(c.Query("response_type")),
+			url.QueryEscape(c.Query("state"))))
 	} else if validationError.Tag() == "valid_scope" {
 		c.Redirect(http.StatusFound, fmt.Sprintf("%s?error=invalid_scope&The+requested+scope+is+invalid,"+
 			"+unknown,+or+malformed.+The+OAuth+2.0+Client+is+not+allowed+to+request+scope+'%s'&state=%s",
 			c.Query("redirect_uri"),
-			c.Query("scope"),
-			c.Query("state")))
+			url.QueryEscape(c.Query("scope")),
+			url.QueryEscape(c.Query("state"))))
 	} else if validationError.Tag() == "valid_state" {
 		c.Redirect(http.StatusFound, fmt.Sprintf("%s?error=invalid_state&The+state+is+missing+or+does+not"+
 			"+have+enough+characters+and+is+therefore+considered+too+weak.+Request+parameter+'state'+must+be"+
 			"+at+least+be+8+characters+long+to+ensure+sufficient+entropy.&state=%s",
 			c.Query("redirect_uri"),
-			c.Query("state")))
+			url.QueryEscape(c.Query("state"))))
 	} else if validationError.Tag() == "valid_client" {
 		c.HTML(http.StatusBadRequest, "error.html", gin.H{
 			"error":       "Authentication error.",
@@ -107,7 +108,7 @@ func (this *routeHandler) authenticateByIdTokenHintWithoutAuthForm(c *gin.Contex
 	this.setCorsHeader(c)
 	c.Redirect(http.StatusFound, fmt.Sprintf("%s?state=%s&code=%s",
 		c.Query("redirect_uri"),
-		c.Query("state"),
+		url.QueryEscape(c.Query("state")),
 		code))
 }
 
@@ -139,7 +140,7 @@ func (this *routeHandler) authenticateBySubjectWithoutAuthForm(c *gin.Context, s
 
 	c.Redirect(http.StatusFound, fmt.Sprintf("%s?state=%s&code=%s",
 		c.Query("redirect_uri"),
-		c.Query("state"),
+		url.QueryEscape(c.Query("state")),
 		code))
 }
 

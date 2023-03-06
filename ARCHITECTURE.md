@@ -17,10 +17,11 @@ GovSSO mock is built and tested with Go 1.19 (which was latest version as of thi
 may work with older versions as newer language features may not yet have been used in mock codebase. GovSSO mock is
 built on Gin web framework and uses the following libraries for implementing main functionality:
 
-* jwt-go – for creating and parsing JWT-s.
-* uuid – for generating UUID values for sid and jti claims.
-* jwx – for producing JWKS endpoint output.
-* zerolog – for logging.
+* jwt-go – for creating and parsing JWT-s;
+* uuid – for generating UUID values for sid and jti claims;
+* jwx – for producing JWKS endpoint output;
+* zerolog – for logging;
+* validator - for validating requests;
 * Bootstrap – for having a consistent UI style.
 
 GovSSO example client setup in Docker Compose, keypair and TLS certificate generation scripts are based on open-source
@@ -43,7 +44,6 @@ GovSSO mock serves additional HTTP response headers analogous to real GovSSO ser
 
 ## Considerations for future development
 
-* Strictly validate input data and produce helpful error messages.
 * Simulate error conditions.
     * Issue different HTTP status codes.
     * Issue ID Tokens and Logout Tokens that don’t pass different security checks that are listed in GovSSO protocol

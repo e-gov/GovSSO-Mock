@@ -5,6 +5,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 	"net/http"
+	"net/url"
 )
 
 func (this *routeHandler) handleSessionLogout(c *gin.Context) {
@@ -42,7 +43,7 @@ func (this *routeHandler) handleSessionLogout(c *gin.Context) {
 
 	postLogoutRedirectUri := request.PostLogoutRedirectUri
 	if request.State != "" {
-		postLogoutRedirectUri += "?state=" + request.State
+		postLogoutRedirectUri += "?state=" + url.QueryEscape(request.State)
 	}
 	c.Redirect(http.StatusMovedPermanently, postLogoutRedirectUri)
 }

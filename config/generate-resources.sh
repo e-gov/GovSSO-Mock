@@ -1,9 +1,10 @@
 #!/bin/bash
+set -eu
 
-cd tls || exit
+cd tls
 bash generate-tls-resources.sh
 
-cd ../id-token || exit
+cd ../id-token
 bash generate-id-token-signing-keys.sh
 
 echo "--------------------------- All resources generated"
