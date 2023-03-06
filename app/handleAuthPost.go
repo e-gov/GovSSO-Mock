@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"net/url"
 )
 
 func (this *routeHandler) handleAuthPost(c *gin.Context) {
@@ -28,6 +29,6 @@ func (this *routeHandler) handleAuthPost(c *gin.Context) {
 
 	c.Redirect(http.StatusFound, fmt.Sprintf("%s?state=%s&code=%s",
 		redirectUri,
-		c.PostForm("state"),
+		url.QueryEscape(c.PostForm("state")),
 		code))
 }

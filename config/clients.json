@@ -6,7 +6,7 @@
       "https://client.test:11443/login/oauth2/code/govsso"
     ],
     "post_logout_redirect_uris": [
-      "https://client.test:11443"
+      "https://client.test:11443/?show-post-logout-message"
     ]
   }
 ]

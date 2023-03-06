@@ -38,7 +38,6 @@ func (this *routeHandler) handleAuthTokenGeneration(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"access_token": "not-used-in-govsso-mock",
 		"id_token":     idToken,
-		"scope":        "openid",
 		"token_type":   "bearer",
 		"expires_in":   3600,
 	})
