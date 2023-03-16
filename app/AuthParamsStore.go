@@ -1,28 +1,25 @@
 package main
 
-import (
-	"math/rand"
-	"strconv"
-)
-
 type authParamsStore struct {
-	paramsByCode map[string]authParams
+	// authParams need to be stored and accessed by either `code` or `refresh_token`, depending on the specific use case.
+	// As this is a mock application, we are storing them in a single map to keep things simpler.
+	params map[string]authParams
 }
 
 func newAuthParamsStore() *authParamsStore {
 	return &authParamsStore{
-		paramsByCode: make(map[string]authParams),
+		params: make(map[string]authParams),
 	}
 }
 
-func (this *authParamsStore) addParams(params authParams) string {
-	code := strconv.Itoa(rand.Int())
-	this.paramsByCode[code] = params
-	return code
+func (this *authParamsStore) addParams(id string, params authParams) {
+	params.expires = this.getNewTokenExpirationTime()
+	this.params[id] = params
 }
 
-func (this *authParamsStore) getParams(code string) *authParams {
-	if params, exists := this.paramsByCode[code]; exists {
+func (this *authParamsStore) getAndDeleteParams(id string) *authParams {
+	if params, exists := this.params[id]; exists {
+		delete(this.params, id)
 		return &params
 	}
 	return nil

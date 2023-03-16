@@ -64,8 +64,6 @@ GovSSO mock serves additional HTTP response headers analogous to real GovSSO ser
 * Remember active sessions and allow to select from these in back-channel logout testing screen.
 * Enable adding multiple JWK-s to JWKS, to simulate key-pair rollover scenario similar to when it would happen in real
   GovSSO service.
-* Set and check a cookie during authentication and session update flows, to better catch client application mistakes
-  during session update background JavaScript request, as CORS configuration is difficult to get right.
 * Limit TLS protocol versions and cipher suites to those that are possible with real GovSSO service.
 * Enable configuring back-channel logout request TLS certificate chain validation.
 * Retry back-channel logout requests.

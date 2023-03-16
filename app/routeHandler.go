@@ -108,12 +108,6 @@ func (this *routeHandler) displayJwks(c *gin.Context) {
 	})
 }
 
-func (this *routeHandler) setCorsHeader(c *gin.Context) {
-	origin := c.Request.Header.Get("Origin")
-	c.Header("Access-Control-Allow-Origin", origin)
-	c.Header("Access-Control-Allow-Credentials", "true")
-}
-
 func (this *routeHandler) findFromPredefinedClients(clientId string) *client {
 	for _, client := range this.predefinedClients {
 		if client.ClientId == clientId {
