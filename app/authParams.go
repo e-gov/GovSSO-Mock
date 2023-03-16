@@ -1,5 +1,7 @@
 package main
 
+import "time"
+
 type authParams struct {
 	acr        string
 	amr        string
@@ -13,4 +15,5 @@ type authParams struct {
 	subject    string
 	sessionId  *string
 	phone      string
+	expires    time.Time
 }

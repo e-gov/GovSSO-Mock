@@ -8,7 +8,8 @@ import (
 )
 
 func (this *routeHandler) handleAuthPost(c *gin.Context) {
-	code := this.authParamsStore.addParams(authParams{
+	code := this.generateRandomString()
+	this.authParamsStore.addParams(code, authParams{
 		acr:        c.PostForm("acr"),
 		amr:        c.PostForm("amr"),
 		birthdate:  c.PostForm("birthdate"),

@@ -12,11 +12,6 @@ import (
 )
 
 func (this *routeHandler) handleAuthGet(c *gin.Context) {
-	if c.Query("prompt") == "none" {
-		this.authenticateByIdTokenHintWithoutAuthForm(c)
-		return
-	}
-
 	subject := c.Query("auto_login")
 	if subject != "" {
 		this.authenticateBySubjectWithoutAuthForm(c, subject)
@@ -84,34 +79,6 @@ func (this *routeHandler) authRequestValidation(sl validator.StructLevel) {
 	}
 }
 
-func (this *routeHandler) authenticateByIdTokenHintWithoutAuthForm(c *gin.Context) {
-	idTokenHint := c.Query("id_token_hint")
-	idTokenClaims, err := this.idTokenService.ParseClaimsFromAuthIdToken(idTokenHint)
-	if err != nil {
-		log.Error().Err(err).Msg("Failed to parse claims from auth identity token")
-		return
-	}
-
-	code := this.authParamsStore.addParams(authParams{
-		acr:        idTokenClaims.Acr,
-		amr:        idTokenClaims.Amr[0],
-		birthdate:  idTokenClaims.Birthdate,
-		clientId:   idTokenClaims.ClientId,
-		givenName:  idTokenClaims.GivenName,
-		familyName: idTokenClaims.FamilyName,
-		nonce:      c.Query("nonce"),
-		state:      c.Query("state"),
-		subject:    idTokenClaims.Subject,
-		sessionId:  &idTokenClaims.SessionId,
-	})
-
-	this.setCorsHeader(c)
-	c.Redirect(http.StatusFound, fmt.Sprintf("%s?state=%s&code=%s",
-		c.Query("redirect_uri"),
-		url.QueryEscape(c.Query("state")),
-		code))
-}
-
 func (this *routeHandler) authenticateBySubjectWithoutAuthForm(c *gin.Context, subject string) {
 	params := authParams{
 		clientId: []string{c.Query("client_id")},
@@ -136,7 +103,8 @@ func (this *routeHandler) authenticateBySubjectWithoutAuthForm(c *gin.Context, s
 		params.subject = subject
 	}
 
-	code := this.authParamsStore.addParams(params)
+	code := this.generateRandomString()
+	this.authParamsStore.addParams(code, params)
 
 	c.Redirect(http.StatusFound, fmt.Sprintf("%s?state=%s&code=%s",
 		c.Query("redirect_uri"),
