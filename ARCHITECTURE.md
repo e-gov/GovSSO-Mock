@@ -53,7 +53,6 @@ GovSSO mock serves additional HTTP response headers analogous to real GovSSO ser
   specification.
 * Support phone scope and phone_number, phone_number_verified claims when this is added to GovSSO protocol
   specification.
-* Optimize Docker image (use multi-stage build to reduce resulting image size).
 * Enable grouping of preconfigured users and add an additional information field to preconfigured users. Useful when
   client application testing requires preconfiguring tens or hundreds of users which currently becomes a long list in
   mock UI where a specific user is difficult or slow to find).
