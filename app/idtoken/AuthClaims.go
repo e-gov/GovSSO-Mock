@@ -1,27 +1,19 @@
 package idtoken
 
-import "github.com/google/uuid"
+import (
+	"github.com/go-jose/go-jose/v3/jwt"
+)
 
 type AuthClaims struct {
-	Acr                 string    `json:"acr"`
-	Amr                 []string  `json:"amr"`
-	AtHash              string    `json:"at_hash"`
-	Birthdate           string    `json:"birthdate"`
-	ClientId            []string  `json:"aud"`
-	ExpiresAt           int64     `json:"exp"`
-	FamilyName          string    `json:"family_name"`
-	GivenName           string    `json:"given_name"`
-	IssuedAt            int64     `json:"iat"`
-	Issuer              string    `json:"iss"`
-	Jti                 uuid.UUID `json:"jti"`
-	Nonce               string    `json:"nonce"`
-	SessionId           string    `json:"sid"`
-	Subject             string    `json:"sub"`
-	PhoneNumber         string    `json:"phone_number,omitempty"`
-	PhoneNumberVerified string    `json:"phone_number_verified,omitempty"`
-}
-
-// Valid checks identity token correctness.
-func (AuthClaims) Valid() error {
-	return nil
+	jwt.Claims
+	Acr                 string   `json:"acr"`
+	Amr                 []string `json:"amr"`
+	AtHash              string   `json:"at_hash"`
+	Birthdate           string   `json:"birthdate"`
+	FamilyName          string   `json:"family_name"`
+	GivenName           string   `json:"given_name"`
+	Nonce               string   `json:"nonce"`
+	SessionId           string   `json:"sid"`
+	PhoneNumber         string   `json:"phone_number,omitempty"`
+	PhoneNumberVerified string   `json:"phone_number_verified,omitempty"`
 }

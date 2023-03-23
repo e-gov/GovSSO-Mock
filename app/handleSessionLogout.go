@@ -21,7 +21,7 @@ func (this *routeHandler) handleSessionLogout(c *gin.Context) {
 		return
 	}
 
-	clientId := idTokenClaims.ClientId[0]
+	clientId := idTokenClaims.Audience[0]
 	client := this.findFromPredefinedClients(clientId)
 	if client == nil {
 		handleError(c, request, err, "Invalid OIDC client", http.StatusBadRequest)
@@ -33,7 +33,15 @@ func (this *routeHandler) handleSessionLogout(c *gin.Context) {
 		return
 	}
 
-	logoutToken, err := this.idTokenService.CreateAndSignLogoutToken(clientId, idTokenClaims.SessionId)
+	authParams := this.authParamsStore.getAndDeleteBySessionId(idTokenClaims.SessionId)
+	var logoutToken string
+	if authParams != nil && authParams.isCustomLogoutToken() {
+		logoutToken, err = this.idTokenService.CreateAndSignCustomLogoutToken(authParams.LogoutTokenClaims)
+		log.Debug().Msgf("Generated logout token: %s; with predefined claims", logoutToken)
+	} else {
+		logoutToken, err = this.idTokenService.CreateAndSignLogoutToken(clientId, idTokenClaims.SessionId)
+		log.Debug().Msgf("Generated logout token: %s", logoutToken)
+	}
 	if err != nil {
 		handleError(c, request, err, "Failed to create and sign logout token", http.StatusInternalServerError)
 		return

@@ -78,7 +78,7 @@ Default deployment is provided with Docker Compose, using domain names client.te
     * birthdate – data that is used as birthdate claim value in issued ID Token;
     * amr – data that is used as amr claim value in issued ID Token;
     * acr – data that is used as acr claim value in issued ID Token;
-    * phone - data that is used as phone_number claim value in issued ID Token.
+    * phone_number - data that is used as phone_number claim value in issued ID Token.
 * config/clients.json - contains a JSON array of preconfigured client application for conveniently selecting on mock
   back-channel logout page; for each client application there is a JSON object with the following properties:
     * client_id – data that is used as aud claim value in issued Logout Token;

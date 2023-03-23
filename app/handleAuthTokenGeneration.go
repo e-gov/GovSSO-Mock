@@ -1,7 +1,6 @@
 package main
 
 import (
-	"GOVSSO-Mock/app/idtoken"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
@@ -21,14 +20,7 @@ func (this *routeHandler) handleAuthTokenGeneration(c *gin.Context) {
 		return
 	}
 
-	var authParams *authParams
-	if request.Code != "" {
-		// Authentication
-		authParams = this.authParamsStore.getAndDeleteParams(request.Code)
-	} else if request.RefreshToken != "" {
-		// Refresh existing session
-		authParams = this.authParamsStore.getAndDeleteParams(request.RefreshToken)
-	}
+	authParams := this.authParamsStore.getAndDeleteByTokenId(request.getId())
 	if authParams == nil {
 		log.Error().Msg("Invalid code or refresh_token")
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -37,7 +29,7 @@ func (this *routeHandler) handleAuthTokenGeneration(c *gin.Context) {
 		})
 		return
 	}
-	if time.Now().After(authParams.expires) {
+	if authParams.isExpired() {
 		log.Error().Msg("Expired token")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error":       "invalid_request",
@@ -45,10 +37,15 @@ func (this *routeHandler) handleAuthTokenGeneration(c *gin.Context) {
 		})
 		return
 	}
+	if request.isRefreshTokenRequest() {
+		updateClaims(authParams)
+	}
+
 	newRefreshToken := this.generateRandomString()
 	this.authParamsStore.addParams(newRefreshToken, *authParams)
-	idTokenClaims := this.initAuthIdTokenClaims(*authParams)
-	idToken, err := this.idTokenService.CreateAndSignAuthIdToken(idTokenClaims)
+
+	idToken, err := this.idTokenService.CreateAndSignAuthIdToken(authParams.IdTokenClaims)
+
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to create and sign identity token")
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -69,34 +66,11 @@ func (this *routeHandler) handleAuthTokenGeneration(c *gin.Context) {
 	})
 }
 
-func (this *routeHandler) initAuthIdTokenClaims(authParams authParams) idtoken.AuthClaims {
-	claims := idtoken.AuthClaims{
-		Acr:        authParams.acr,
-		Amr:        []string{authParams.amr},
-		AtHash:     "QeS-bzYvCt5cN0c0BLVrAA",
-		ClientId:   authParams.clientId,
-		Birthdate:  authParams.birthdate,
-		ExpiresAt:  time.Now().Add(15 * time.Minute).Unix(),
-		FamilyName: authParams.familyName,
-		GivenName:  authParams.givenName,
-		IssuedAt:   time.Now().Unix(),
-		Issuer:     this.config.HostUri(),
-		Jti:        uuid.New(),
-		Nonce:      authParams.nonce,
-		Subject:    authParams.subject,
-	}
-
-	if len(authParams.phone) != 0 {
-		claims.PhoneNumber = authParams.phone
-		claims.PhoneNumberVerified = "true"
-	}
-
-	if authParams.sessionId == nil {
-		claims.SessionId = uuid.New().String()
-	} else {
-		claims.SessionId = *authParams.sessionId
-	}
-	return claims
+func updateClaims(authParams *authParams) {
+	issuedAt := time.Now()
+	authParams.IdTokenClaims["iat"] = issuedAt.Unix()
+	authParams.IdTokenClaims["exp"] = issuedAt.Add(15 * time.Minute).Unix()
+	authParams.IdTokenClaims["jti"] = uuid.New()
 }
 
 func (this *routeHandler) generateRandomString() string {
@@ -107,8 +81,4 @@ func (this *routeHandler) generateRandomString() string {
 		tokenBytes[i] = characterSet[rand.Intn(len(characterSet))]
 	}
 	return string(tokenBytes)
-}
-
-func (this *authParamsStore) getNewTokenExpirationTime() time.Time {
-	return time.Now().Add(15 * time.Minute)
 }

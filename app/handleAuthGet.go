@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 )
 
 func (this *routeHandler) handleAuthGet(c *gin.Context) {
@@ -21,6 +22,7 @@ func (this *routeHandler) handleAuthGet(c *gin.Context) {
 	if err := c.ShouldBindQuery(&request); err == nil {
 		c.HTML(http.StatusOK, "userAuth.html", gin.H{
 			"Request":         request,
+			"Issuer":          this.config.HostUri(),
 			"PredefinedUsers": this.predefinedUsers,
 			"isPhoneScope":    strings.Contains(c.Query("scope"), "phone"),
 		})
@@ -80,34 +82,39 @@ func (this *routeHandler) authRequestValidation(sl validator.StructLevel) {
 }
 
 func (this *routeHandler) authenticateBySubjectWithoutAuthForm(c *gin.Context, subject string) {
-	params := authParams{
-		clientId: []string{c.Query("client_id")},
-		nonce:    c.Query("nonce"),
-		state:    c.Query("state"),
+	claims := map[string]interface{}{
+		"at_hash": "YjllNTNjMDY1Y2MxZGNlYmQwODZiZDQwZDkzNzRjNGNjZDQ3YWFlMjgzN2IwZTQ1NTcxODlhMTU4NzhiOWE4Nw==",
+		"aud":     []string{c.Query("client_id")},
+		"exp":     time.Now().Add(15 * time.Minute).Unix(),
+		"iat":     time.Now().Unix(),
+		"iss":     this.config.HostUri(),
+		"jti":     uuid.New(),
+		"nonce":   c.Query("nonce"),
+		"sid":     uuid.New().String(),
 	}
 
 	if user := this.findFromPredefinedUsers(subject); user != nil {
-		params.acr = user.Acr
-		params.amr = user.Amr
-		params.birthdate = user.Birthdate
-		params.givenName = user.GivenName
-		params.familyName = user.FamilyName
-		params.subject = user.Subject
-		params.phone = user.Phone
+		claims["acr"] = user.Acr
+		claims["amr"] = []string{user.Amr}
+		claims["birthdate"] = user.Birthdate
+		claims["given_name"] = user.GivenName
+		claims["family_name"] = user.FamilyName
+		claims["subject"] = user.Subject
 	} else {
-		params.acr = "high"
-		params.amr = "idcard"
-		params.birthdate = "2000-01-01"
-		params.givenName = fmt.Sprintf("%s-GivenName", subject)
-		params.familyName = fmt.Sprintf("%s-FamilyName", subject)
-		params.subject = subject
+		claims["acr"] = "high"
+		claims["amr"] = []string{"idcard"}
+		claims["birthdate"] = "2000-01-01"
+		claims["given_name"] = fmt.Sprintf("%s-GivenName", subject)
+		claims["family_name"] = fmt.Sprintf("%s-FamilyName", subject)
+		claims["subject"] = user.Subject
 	}
 
 	code := this.generateRandomString()
-	this.authParamsStore.addParams(code, params)
+	this.authParamsStore.addParams(code, authParams{
+		IdTokenClaims: claims,
+	})
 
-	c.Redirect(http.StatusFound, fmt.Sprintf("%s?state=%s&code=%s",
-		c.Query("redirect_uri"),
+	c.Redirect(http.StatusFound, fmt.Sprintf("%s?state=%s&code=%s", c.Query("redirect_uri"),
 		url.QueryEscape(c.Query("state")),
 		code))
 }
