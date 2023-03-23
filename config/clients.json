@@ -1,7 +1,7 @@
 [
   {
     "client_id": "example-client-id",
-    "backchannel_logout_uri": "https://client.test:11443/backchannellogout",
+    "backchannel_logout_uri": "https://client.test:11443/oauth2/back-channel-logout/govsso",
     "redirect_uris": [
       "https://client.test:11443/login/oauth2/code/govsso"
     ],

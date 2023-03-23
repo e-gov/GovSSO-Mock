@@ -5,15 +5,14 @@ import (
 	"crypto/rsa"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+	"github.com/go-jose/go-jose/v3"
 	"github.com/go-playground/validator/v10"
-	"github.com/lestrrat-go/jwx/jwk"
-	"github.com/rs/zerolog/log"
 	"net/http"
 )
 
 type routeHandler struct {
 	config            config
-	idTokenSigningKey *rsa.PrivateKey
+	idTokenSigningKey *jose.SigningKey
 	predefinedUsers   []user
 	predefinedClients []client
 	authParamsStore   *authParamsStore
@@ -81,30 +80,16 @@ func (this *routeHandler) displayOpenIdConfiguration(c *gin.Context) {
 }
 
 func (this *routeHandler) displayJwks(c *gin.Context) {
-	idTokenJwk, err := jwk.New(&this.idTokenSigningKey.PublicKey)
-	if err != nil {
-		log.Error().Err(err).Msg("Failed to create identity token JWK")
-		return
-	}
-
-	err = idTokenJwk.Set("kid", this.config.IdTokenSignKeyId)
-	if err != nil {
-		log.Error().Err(err).Msg("Failed to modify identity token JWK key id")
-		return
-	}
-	err = idTokenJwk.Set("alg", "RS256")
-	if err != nil {
-		log.Error().Err(err).Msg("Failed to add 'alg' to identity token JWK")
-		return
-	}
-	err = idTokenJwk.Set("use", "sig")
-	if err != nil {
-		log.Error().Err(err).Msg("Failed to add 'use' to identity token JWK")
-		return
-	}
+	key := this.idTokenSigningKey.Key.(*rsa.PrivateKey)
+	keys := &[]jose.JSONWebKey{{
+		Algorithm: "RS256",
+		Use:       "sig",
+		Key:       &key.PublicKey,
+		KeyID:     this.config.IdTokenSignKeyId,
+	}}
 
 	c.JSON(http.StatusOK, gin.H{
-		"keys": []jwk.Key{idTokenJwk},
+		"keys": keys,
 	})
 }
 

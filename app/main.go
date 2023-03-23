@@ -3,9 +3,11 @@ package main
 import (
 	"GOVSSO-Mock/app/idtoken"
 	"GOVSSO-Mock/app/json"
-	"crypto/rsa"
 	"crypto/tls"
-	"github.com/golang-jwt/jwt/v4"
+	"crypto/x509"
+	"encoding/pem"
+	"github.com/go-jose/go-jose/v3"
+	"github.com/pkg/errors"
 	"github.com/rs/zerolog/log"
 	"net/http"
 	"os"
@@ -42,12 +44,22 @@ func main() {
 	}
 }
 
-func loadIdTokenSigningKey(config config) (*rsa.PrivateKey, error) {
+func loadIdTokenSigningKey(config config) (*jose.SigningKey, error) {
 	privateKeyBytes, err := os.ReadFile(config.IdTokenSignPrivateKeyPath)
 	if err != nil {
 		return nil, err
 	}
-	return jwt.ParseRSAPrivateKeyFromPEM(privateKeyBytes)
+
+	pemBlock, _ := pem.Decode(privateKeyBytes)
+	if pemBlock == nil {
+		return nil, errors.New("Unable to parse private key")
+	}
+	privateKey, err := x509.ParsePKCS1PrivateKey(pemBlock.Bytes)
+	if err != nil {
+		return nil, err
+	}
+
+	return &jose.SigningKey{Algorithm: jose.RS256, Key: privateKey}, nil
 }
 
 func tlsChecksDisabledHttpClient() *http.Client {

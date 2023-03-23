@@ -8,166 +8,280 @@
 
     <link rel="stylesheet" href="/assets/bootstrap.min.css">
 
+    <script type="text/javascript" src="/assets/bootstrap.min.js"></script>
     <script type="text/javascript" src="/assets/auth-script.js"></script>
 </head>
 
 <body>
-<div class="container mt-4 mb-5">
+<div class="container mt-4 mb-3">
     <p>GovSSO mock serves <a href="https://e-gov.github.io/GOVSSO/TechnicalSpecification">GovSSO protocol</a> to
         clients.</p>
 </div>
 
 <div class="container mb-3">
-    <h3 class="mb-4">Authentication request</h3>
     <div class="row">
         <div class="col">
-            <fieldset class="form-group px-5">
-                <div class="row">
-                    <div class="col-sm-9">
-                        {{range $i, $user := .PredefinedUsers}}
-                        <div class="form-check mb-4">
-                            <label class="form-check-label">
-                                <input id="user-selection-{{ $i }}"
-                                       class="form-check-input" type="radio" name="user"
-                                       onclick="fillAuthenticationForm({{.}});"/>
-                                {{ $user.Subject }} <br>
-                                {{ $user.GivenName }} {{ $user.FamilyName }}, {{ $user.Birthdate }}, {{ $user.Amr }}, {{
-                                $user.Acr }}{{if $user.Phone}}, {{ $user.Phone }}{{end}}
-                            </label>
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <button class="nav-link" id="nav-request-tab" data-bs-toggle="tab" data-bs-target="#nav-request"
+                            type="button" role="tab" aria-controls="nav-request" aria-selected="false">Autentication
+                        request parameters
+                    </button>
+                    <button class="nav-link active" id="nav-person-tab" data-bs-toggle="tab"
+                            data-bs-target="#nav-person" type="button" role="tab" aria-controls="nav-person"
+                            aria-selected="true">Authenticating person
+                    </button>
+                    <button class="nav-link" id="nav-claims-tab" data-bs-toggle="tab" data-bs-target="#nav-claims"
+                            type="button" role="tab" aria-controls="nav-claims" aria-selected="false">Modify ID/Logout token claims
+                    </button>
+                </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade" id="nav-request" role="tabpanel" aria-labelledby="nav-request-tab"
+                     tabindex="0">
+                    <div class="container mt-3">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label font-weight-bold">response_type</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control-plaintext" readonly
+                                       value="{{ .Request.ResponseType }}">
+                            </div>
                         </div>
-                        {{end}}
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label font-weight-bold">client_id</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control-plaintext" readonly
+                                       value="{{ .Request.ClientId }}">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label font-weight-bold">scope</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control-plaintext" readonly
+                                       value="{{ .Request.Scope }}">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label font-weight-bold">state</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control-plaintext" readonly
+                                       value="{{ .Request.State }}">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label font-weight-bold">nonce</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control-plaintext" readonly
+                                       value="{{ .Request.Nonce }}">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label font-weight-bold">redirect_uri</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control-plaintext" readonly
+                                       value="{{ .Request.RedirectUri }}">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label font-weight-bold">ui_locales</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control-plaintext" readonly
+                                       value="{{ .Request.UILocales }}">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label font-weight-bold">acr_values</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control-plaintext" readonly
+                                       value="{{ .Request.AcrValues }}">
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </fieldset>
-            <div class="container mt-5">
-                <span>response_type = <b>{{ .Request.ResponseType }}</b></span><br>
-                <span>client_id = <b>{{ .Request.ClientId }}</b></span><br>
-                <span>scope = <b>{{ .Request.Scope }}</b></span><br>
-                <span>state = <b>{{ .Request.State }}</b></span><br>
-                <span>nonce = <b>{{ .Request.Nonce }}</b></span><br>
-                <span>redirect_uri = <b>{{ .Request.RedirectUri }}</b></span><br>
-                <span>ui_locales = <b>{{ .Request.UILocales }}</b></span><br>
-                <span>acr_values = <b>{{ .Request.AcrValues }}</b></span><br>
-            </div>
-        </div>
-        <div class="col">
-            <form action="/oauth2/auth" method="POST">
-                <input type="hidden" id="response_type" name="response_type"
-                       value="{{ .Request.ResponseType }}">
-                <input type="hidden" id="client_id" name="client_id"
-                       value="{{ .Request.ClientId }}">
-                <input type="hidden" id="scope" name="scope"
-                       value="{{ .Request.Scope }}">
-                <input type="hidden" id="state" name="state"
-                       value="{{ .Request.State }}">
-                <input type="hidden" id="nonce" name="nonce"
-                       value="{{ .Request.Nonce }}">
-                <input type="hidden" id="redirect_uri" name="redirect_uri"
-                       value="{{ .Request.RedirectUri }}">
+                <div class="tab-pane fade show active" id="nav-person" role="tabpanel" aria-labelledby="nav-person-tab"
+                     tabindex="1">
+                    <div class="container mt-3">
+                        <div class="form-group row mb-2">
+                            {{range $i, $user := .PredefinedUsers}}
+                            <div class="form-check mb-4">
+                                <label class="form-check-label">
+                                    <input id="user-selection-{{ $i }}"
+                                           class="form-check-input" type="radio" name="user"
+                                           onclick="fillAuthenticationForm({{.}});"/>
+                                    {{ $user.Subject }} <br>
+                                    {{ $user.GivenName }} {{ $user.FamilyName }}, {{ $user.Birthdate }}, {{
+                                    $user.Amr }}, {{
+                                    $user.Acr }}{{if $user.PhoneNumber}}, {{ $user.PhoneNumber }}{{end}}
+                                </label>
+                            </div>
+                            {{end}}
+                        </div>
+                        <form id="auth_form">
+                            <input type="hidden" name="nonce" value="{{ .Request.Nonce }}">
+                            <input type="hidden" name="iss" value="{{ .Issuer }}">
+                            <input type="hidden" name="aud" value="{{ .Request.ClientId }}">
 
-                <div class="form-group row mb-2">
-                    <label for="subject" class="col-sm-3 col-form-label">Identifier (sub)</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control" id="subject" name="subject" size="11"
-                               placeholder="e.g. EE38001085718" required>
-                    </div>
-                </div>
-                <div class="form-group row mb-2">
-                    <label for="given_name" class="col-sm-3 col-form-label">Given name</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control" id="given_name" name="given_name"
-                               placeholder="e.g. Jaak-Kristjan" required>
-                    </div>
-                </div>
-                <div class="form-group row mb-2">
-                    <label for="family_name" class="col-sm-3 col-form-label">Family name</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control" id="family_name" name="family_name"
-                               placeholder="e.g. Jõeorg" required>
-                    </div>
-                </div>
-                <div class="form-group row mb-2">
-                    <label for="birthdate" class="col-sm-3 col-form-label">Birthdate</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control" id="birthdate" name="birthdate"
-                               placeholder="e.g. 1980-01-08" required>
-                    </div>
-                </div>
-                {{if .isPhoneScope }}
-                <div class="form-group row mb-2">
-                    <label for="phone" class="col-sm-3 col-form-label">Phone</label>
-                    <div class="col-sm-9">
-                        <input type="tel" class="form-control" id="phone" name="phone"
-                               placeholder="e.g. +37268000769">
-                    </div>
-                </div>
-                {{end}}
-                <div class="container mt-3 mb-3">
-                    <div class="row">
-                        <div class="col">
-                            <fieldset class="form-group mb-2">
+                            <div class="form-group row mb-2">
+                                <label for="subject" class="col-sm-3 col-form-label">Identifier (sub)</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="subject" name="sub" size="11"
+                                           placeholder="e.g. EE38001085718" required>
+                                </div>
+                            </div>
+                            <div class="form-group row mb-2">
+                                <label for="given_name" class="col-sm-3 col-form-label">Given name</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="given_name" name="given_name"
+                                           placeholder="e.g. Jaak-Kristjan" required>
+                                </div>
+                            </div>
+                            <div class="form-group row mb-2">
+                                <label for="family_name" class="col-sm-3 col-form-label">Family name</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="family_name" name="family_name"
+                                           placeholder="e.g. Jõeorg" required>
+                                </div>
+                            </div>
+                            <div class="form-group row mb-2">
+                                <label for="birthdate" class="col-sm-3 col-form-label">Birthdate</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="birthdate" name="birthdate"
+                                           placeholder="e.g. 1980-01-08" required>
+                                </div>
+                            </div>
+                            {{if .isPhoneScope }}
+                            <div class="form-group row mb-2">
+                                <label for="phone_number" class="col-sm-3 col-form-label">Phone</label>
+                                <div class="col-sm-9">
+                                    <input type="tel" class="form-control" id="phone_number" name="phone_number"
+                                           placeholder="e.g. +37268000769">
+                                    <input type="hidden" class="form-control" id="phone_number_verified"
+                                           name="phone_number_verified" value="true">
+                                </div>
+                            </div>
+                            {{end}}
+                            <div class="container mt-3 mb-3">
                                 <div class="row">
-                                    <legend class="col-form-label col-sm-3 pt-0">Auth method (amr)</legend>
-                                    <div class="col-sm-9">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="amr" id="idcard"
-                                                   value="idcard" checked>
-                                            <label class="form-check-label" for="idcard">idcard</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="amr" id="mID"
-                                                   value="mID">
-                                            <label class="form-check-label" for="mID">mID</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="amr" id="smartid"
-                                                   value="smartid">
-                                            <label class="form-check-label" for="smartid">smartid</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="amr" id="eIDAS"
-                                                   value="eIDAS">
-                                            <label class="form-check-label" for="eIDAS">eIDAS</label>
-                                        </div>
+                                    <div class="col">
+                                        <fieldset class="form-group mb-2">
+                                            <div class="row">
+                                                <legend class="col-form-label col-sm-3 pt-0">Auth method (amr)
+                                                </legend>
+                                                <div class="col-sm-9">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="amr"
+                                                               id="idcard"
+                                                               value="idcard" checked>
+                                                        <label class="form-check-label" for="idcard">idcard</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="amr"
+                                                               id="mID"
+                                                               value="mID">
+                                                        <label class="form-check-label" for="mID">mID</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="amr"
+                                                               id="smartid"
+                                                               value="smartid">
+                                                        <label class="form-check-label"
+                                                               for="smartid">smartid</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="amr"
+                                                               id="eIDAS"
+                                                               value="eIDAS">
+                                                        <label class="form-check-label" for="eIDAS">eIDAS</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <div class="col">
+                                        <fieldset class="form-group mb-2">
+                                            <div class="row">
+                                                <legend class="col-form-label col-sm-3 pt-0">Auth context class
+                                                    (acr)
+                                                </legend>
+                                                <div class="col-sm-9">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="acr"
+                                                               id="acr-high"
+                                                               value="high" checked>
+                                                        <label class="form-check-label" for="acr-high">high</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="acr"
+                                                               id="acr-substantial"
+                                                               value="substantial">
+                                                        <label class="form-check-label"
+                                                               for="acr-substantial">substantial</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="acr"
+                                                               id="acr-low"
+                                                               value="low">
+                                                        <label class="form-check-label" for="acr-low">low</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
                                     </div>
                                 </div>
-                            </fieldset>
-                        </div>
-                        <div class="col">
-                            <fieldset class="form-group mb-2">
-                                <div class="row">
-                                    <legend class="col-form-label col-sm-3 pt-0">Auth context class (acr)</legend>
-                                    <div class="col-sm-9">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="acr" id="acr-high"
-                                                   value="high" checked>
-                                            <label class="form-check-label" for="acr-high">high</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="acr" id="acr-substantial"
-                                                   value="substantial">
-                                            <label class="form-check-label" for="acr-substantial">substantial</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="acr" id="acr-low"
-                                                   value="low">
-                                            <label class="form-check-label" for="acr-low">low</label>
-                                        </div>
-                                    </div>
+                            </div>
+
+                            <div class="form-group row mt-4">
+                                <div class="col-sm-9">
+                                    <button type="submit" class="btn btn-primary" form="tokens_form"
+                                            onclick="generateIdTokenClaims()">Authenticate
+                                    </button>
+                                    <button type="submit" class="btn btn-primary" form="tokens_form"
+                                            formaction="/oauth2/cancel">Cancel
+                                        authentication
+                                    </button>
                                 </div>
-                            </fieldset>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="nav-claims" role="tabpanel" aria-labelledby="nav-claims-tab"
+                     tabindex="2">
+                    <div class="container mt-3">
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label for="id_token_claims">ID token claims</label>
+                                <textarea class="form-control" id="id_token_claims" name="id_token_claims" rows="22"
+                                          form="tokens_form"></textarea>
+                            </div>
+                            <div class="form-check mt-4">
+                                <input class="form-check-input" type="checkbox" id="gen_logout_token" onchange="generateLogoutTokenClaims(this)">
+                                <label class="form-check-label" for="gen_logout_token">
+                                    Use predefined logout token
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <textarea class="d-none form-control" id="logout_token_claims" name="logout_token_claims" rows="12"
+                                          form="tokens_form" disabled></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row mt-4">
+                            <div class="col-sm-9">
+                                <form id="tokens_form" action="/oauth2/auth" method="POST">
+                                    <input type="hidden" id="client_id" name="client_id"
+                                           value="{{ .Request.ClientId }}">
+                                    <input type="hidden" id="state" name="state" value="{{ .Request.State }}">
+                                    <input type="hidden" id="redirect_uri" name="redirect_uri"
+                                           value="{{ .Request.RedirectUri }}">
+                                    <button type="submit" class="btn btn-primary">Authenticate</button>
+                                    <button type="submit" class="btn btn-primary" formaction="/oauth2/cancel">Cancel
+                                        authentication
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="form-group row mt-4">
-                    <div class="col-sm-10">
-                        <button type="submit" class="btn btn-primary">Authenticate</button>
-                        <button type="submit" class="btn btn-primary" formaction="/oauth2/cancel">Cancel
-                            authentication
-                        </button>
-                    </div>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
