@@ -66,14 +66,6 @@ openssl pkcs12 \
   -passout pass:changeit \
   -out "$applicationName/$host.keystore.p12"
 
-# Add CA certificate to application keystore
-keytool -noprompt \
-  -importcert \
-  -alias "$ca.$environment" \
-  -file "$ca/$ca.$environment.crt" \
-  -storepass changeit \
-  -keystore "$applicationName/$host.keystore.p12"
-
 # TODO: Find a better solution than making the keys readable by everyone.
 # Make the files readable by all users inside containers.
 chmod 644 "$applicationName"/*
