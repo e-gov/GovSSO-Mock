@@ -4,6 +4,7 @@ echo "--------------------------- Generating RSA public and private key pair for
 
 openssl genrsa \
   -out idTokenSign.key \
+  -traditional \
   4096
 
 openssl rsa \
