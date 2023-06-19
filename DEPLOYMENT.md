@@ -5,28 +5,19 @@
 1. Default setup requires Docker Engine and Docker Compose to be installed (or Docker Desktop, which also provides
    these). Refer to https://docs.docker.com/engine/install/ and https://docs.docker.com/compose/install/ for further
    instructions.
-2. Clone the content of open-source GovSSO example client repository, either by
-   running `git clone https://github.com/e-gov/GOVSSO-Client.git` (requires Git to be installed) or by
-   downloading https://github.com/e-gov/GOVSSO-Client/archive/refs/heads/master.zip and unpacking it.
-3. Clone the content of this GovSSO mock repository, either by
+2. Clone the content of this GovSSO mock repository, either by
    running `git clone https://github.com/e-gov/GOVSSO-Mock.git` (requires Git to be installed) or by
    downloading https://github.com/e-gov/GOVSSO-Mock/archive/refs/heads/main.zip and unpacking it.
 
 ## Building
 
-1. Run the following command to build Docker image of example client (replace `C:/path/to/GOVSSO-Client` part with
-   absolute path of the cloned GOVSSO-Client repository folder in your filesystem; MSYS_NO_PATHCONV=1 is only needed
-   when using Git Bash shell on Windows, remove it when using PowerShell, Windows command prompt or Linux/Mac):
-   ```shell
-   MSYS_NO_PATHCONV=1 docker run --rm --user $(id -u):$(id -g) -v /var/run/docker.sock:/var/run/docker.sock -v C:/path/to/GOVSSO-Client:/project -w /project maven:3.8-openjdk-17 mvn spring-boot:build-image
-   ```
-2. Run the following command to build Docker image of mock (replace `C:/path/to/GOVSSO-Mock` part with absolute path of
+1. Run the following command to build Docker image of mock (replace `C:/path/to/GOVSSO-Mock` part with absolute path of
    the cloned GOVSSO-Mock repository folder in your filesystem); note that Docker Compose command is `docker compose` in
    newer Docker Compose versions and `docker-compose` in older Docker Compose versions:
    ```shell
    docker compose -f C:/path/to/GOVSSO-Mock/docker-compose.yml build
    ```
-3. Run the following command to generate keypairs and certificates for mock and example client (replace
+2. Run the following command to generate keypairs and certificates for mock and example client (replace
    `C:/path/to/GOVSSO-Mock` part with absolute path of the cloned GOVSSO-Mock repository folder in your
    filesystem; MSYS_NO_PATHCONV=1 is only needed when using Git Bash shell on Windows, remove it when using PowerShell,
    Windows command prompt or Linux/Mac):
