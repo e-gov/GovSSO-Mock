@@ -27,26 +27,19 @@
 
 ## Running
 
-Default deployment is provided with Docker Compose, using domain names client.test and govsso-mock.test
+Default deployment is provided with Docker Compose, using domain names client.localhost and govsso-mock.localhost
 
 <img src="doc/deployment-docker_compose.png" width="700"/>
 
-1. For successfully accessing example client and mock web pages from your host machine web browser, custom domain names
-   must be added to your host machine’s `hosts` file. Refer
-   to https://www.howtogeek.com/howto/27350/beginner-geek-how-to-edit-your-hosts-file/ for further instructions on
-   editing `hosts` file and add the following line to it:
-   ```text
-   127.0.0.1 govsso-mock.test client.test
-   ```
-2. Run the following command to run Docker images of mock and example client with Docker Compose (replace
+1. Run the following command to run Docker images of mock and example client with Docker Compose (replace
    `C:/path/to/GOVSSO-Mock` part with absolute path of the cloned GOVSSO-Mock repository folder in your
    filesystem); note that Docker Compose command is `docker compose` in newer Docker Compose versions
    and `docker-compose` in older Docker Compose versions:
    ```shell
    docker compose -f C:/path/to/GOVSSO-Mock/docker-compose.yml up
    ```
-3. Open https://client.test:11443/ to test authentication, session update and logout flows;
-   open https://govsso-mock.test:10443/ to test back-channel logout request. Refer to [USAGE.md](USAGE.md) for more
+2. Open https://client.localhost:11443/ to test authentication, session update and logout flows;
+   open https://govsso-mock.localhost:10443/ to test back-channel logout request. Refer to [USAGE.md](USAGE.md) for more
    detailed instructions on usage.
 
 ## Configuration

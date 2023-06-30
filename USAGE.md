@@ -14,12 +14,12 @@ requests.
 
 GovSSO mock implements same 5 endpoints that are listed in GovSSO protocol specification and 1 custom endpoint:
 
-* https://govsso-mock.test:10443/.well-known/openid-configuration - server discovery.
-* https://govsso-mock.test:10443/.well-known/jwks.json - key info.
-* https://govsso-mock.test:10443/oauth2/auth - authorization.
-* https://govsso-mock.test:10443/oauth2/token - token.
-* https://govsso-mock.test:10443/oauth2/sessions/logout - logout.
-* https://govsso-mock.test:10443/ - additional page for initiating back-channel logout requests.
+* https://govsso-mock.localhost:10443/.well-known/openid-configuration - server discovery.
+* https://govsso-mock.localhost:10443/.well-known/jwks.json - key info.
+* https://govsso-mock.localhost:10443/oauth2/auth - authorization.
+* https://govsso-mock.localhost:10443/oauth2/token - token.
+* https://govsso-mock.localhost:10443/oauth2/sessions/logout - logout.
+* https://govsso-mock.localhost:10443/ - additional page for initiating back-channel logout requests.
 
 Currently mock returns protocol-compliant responses for all successful flows but doesn’t validate input data. Some input
 parameters are required for flows to successfully pass, but others are not required. Omission of validation is not
@@ -27,7 +27,7 @@ further documented here, because adding validation should be considered a future
 
 ## 1 Authentication
 
-1. Open https://client.test:11443/ , example client displays the following page:
+1. Open https://client.localhost:11443/ , example client displays the following page:
 
    <img src="doc/client-logged_out.png" width="1000"/>
 2. Click “Log in”, example client performs authentication request and mock displays the following page:
@@ -44,7 +44,7 @@ further documented here, because adding validation should be considered a future
 
 For completing authentication request automatically in mock, without displaying an UI page, auto_login URL parameter can
 be added to authentication request. Its value must be personal code (sub claim of ID Token) of desired user. For
-example https://govsso-mock.test:10443/oauth2/auth?response_type=code&client_id=example-client-id&scope=openid&state=12345678&redirect_uri=https://client.test:11443/login/oauth2/code/govsso&auto_login=EE37101010021
+example https://govsso-mock.localhost:10443/oauth2/auth?response_type=code&client_id=example-client-id&scope=openid&state=12345678&redirect_uri=https://client.localhost:11443/login/oauth2/code/govsso&auto_login=EE37101010021
 . If user with specified personal code exists in users.json, that user data is used. If user with specified personal
 code doesn’t exist in users.json, that personal code is still used for issuing ID Token, but given name, family name,
 and birthdate fields are filled with default data.
@@ -93,7 +93,7 @@ in Firefox.
 1. Complete authentication flow as specified in “1 Authentication”. Copy “sid” value for future usage.
 
    <img src="doc/client-logged_in2.png" width="1000"/>
-2. Open https://govsso-mock.test:10443/ in another tab or window, mock displays the following page:
+2. Open https://govsso-mock.localhost:10443/ in another tab or window, mock displays the following page:
     * Mock allows to select from preconfigured client applications on the left side of page and/or specify custom
       back-channel logout request data on the right side of page. By default, only one example client is preconfigured.
 
@@ -109,12 +109,12 @@ in Firefox.
     * For performing back-channel logout request automatically in mock, without displaying an UI page, the same request
       can be performed with an appropriate tool as browser would perform, for example:
       ```text
-      POST https://govsso-mock.test:10443/backchannel/sessions/logout HTTP/1.1
-      Host: govsso-mock.test:10443
+      POST https://govsso-mock.localhost:10443/backchannel/sessions/logout HTTP/1.1
+      Host: govsso-mock.localhost:10443
       Content-Length: 120
       Content-Type: application/x-www-form-urlencoded
 
-      backchannel_logout_uri=https%3A%2F%2Fclient.test%3A11443%2Fbackchannellogout&client_id=example-client-id&session_id=1234
+      backchannel_logout_uri=https%3A%2F%2Fclient.localhost%3A11443%2Fbackchannellogout&client_id=example-client-id&session_id=1234
       ```
 
    <img src="doc/mock-backchannel_logout_request_succeeded.png" width="1000"/>

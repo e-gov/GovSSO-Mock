@@ -1,9 +1,9 @@
 {
-  "host": "govsso-mock.test",
+  "host": "govsso-mock.localhost",
   "serverPort": "10443",
   "baseHref": "/",
-  "tlsCertificate": "config/tls/govsso-mock/govsso-mock.test.crt",
-  "tlsPrivateKey": "config/tls/govsso-mock/govsso-mock.test.key",
+  "tlsCertificate": "config/tls/govsso-mock/govsso-mock.localhost.crt",
+  "tlsPrivateKey": "config/tls/govsso-mock/govsso-mock.localhost.key",
   "idTokenSignPrivateKeyPath": "config/id-token/idTokenSign.key",
   "idTokenSignPublicKeyPath": "config/id-token/idTokenSign.pub",
   "idTokenSignKeyId": "govsso-mock"

@@ -1,12 +1,12 @@
 [
   {
     "client_id": "example-client-id",
-    "backchannel_logout_uri": "https://client.test:11443/oauth2/back-channel-logout/govsso",
+    "backchannel_logout_uri": "https://client.localhost:11443/oauth2/back-channel-logout/govsso",
     "redirect_uris": [
-      "https://client.test:11443/login/oauth2/code/govsso"
+      "https://client.localhost:11443/login/oauth2/code/govsso"
     ],
     "post_logout_redirect_uris": [
-      "https://client.test:11443/?show-post-logout-message"
+      "https://client.localhost:11443/?show-post-logout-message"
     ]
   }
 ]
