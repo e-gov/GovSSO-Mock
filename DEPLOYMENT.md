@@ -32,9 +32,9 @@ Default deployment is provided with Docker Compose, using domain names client.lo
 <img src="doc/deployment-docker_compose.png" width="700"/>
 
 1. Run the following command to run Docker images of mock and example client with Docker Compose (replace
-   `C:/path/to/GOVSSO-Mock` part with absolute path of the cloned GOVSSO-Mock repository folder in your
-   filesystem); note that Docker Compose command is `docker compose` in newer Docker Compose versions
-   and `docker-compose` in older Docker Compose versions:
+   `C:/path/to/GOVSSO-Mock` part with absolute path of the cloned GOVSSO-Mock repository folder in your filesystem);
+   note that Docker Compose command is `docker compose` in newer Docker Compose versions and `docker-compose` in older
+   Docker Compose versions:
    ```shell
    docker compose -f C:/path/to/GOVSSO-Mock/docker-compose.yml up
    ```
@@ -68,5 +68,7 @@ Default deployment is provided with Docker Compose, using domain names client.lo
     * client_id – data that is used as aud claim value in issued Logout Token;
     * backchannel_logout_uri – client application’s endpoint URL where client application accepts back-channel logout
       requests;
-    * redirect_uris - list of client application's redirect URLs where client application accepts authorization callbacks;
-    * post_logout_redirect_uris - list of client application's redirect URLs where client application accepts logout callbacks.
+    * redirect_uris - list of client application's redirect URLs where client application accepts authorization
+      callbacks;
+    * post_logout_redirect_uris - list of client application's redirect URLs where client application accepts logout
+      callbacks.

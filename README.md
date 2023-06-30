@@ -4,12 +4,14 @@ GovSSO mock is an application that serves [GovSSO protocol](https://e-gov.github
 clients. Its main use cases are:
 
 * Enable client applications to develop and test integration with GovSSO protocol. Compared to GovSSO service demo
-  environment, mock can be used without needing registration and can also be used offline or in closed networks.
-* Provide mock authentication data in development and test environments. Compared to GovSSO service demo environment,
-  mock can return arbitrary user data to client and is also simpler to use with automated tests.
+  environment (`govsso-demo.ria.ee`), mock can be used without needing registration with RIA and can also be used
+  offline or in closed networks.
+* Provide mock authentication data in development and test environments. Compared to GovSSO service demo environment
+  (`govsso-demo.ria.ee`), mock can return arbitrary user data to client application and is also simpler to use with
+  automated tests.
 
-Currently GovSSO mock returns protocol-compliant responses for all successful flows. Validating input data and
-simulating error conditions should be considered for future development.
+GovSSO mock returns protocol-compliant responses for all successful flows, currently validates most conditions on input
+data and allows to simulate many error conditions.
 
 ## Documentation
 
