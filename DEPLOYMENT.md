@@ -7,7 +7,7 @@
    instructions.
 2. Clone the content of this GovSSO mock repository, either by
    running `git clone https://github.com/e-gov/GOVSSO-Mock.git` (requires Git to be installed) or by
-   downloading https://github.com/e-gov/GOVSSO-Mock/archive/refs/heads/main.zip and unpacking it.
+   downloading https://github.com/e-gov/GOVSSO-Mock/archive/refs/heads/master.zip and unpacking it.
 
 ## Building
 
