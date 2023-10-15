@@ -1,3 +1,5 @@
+<img src="doc/eu_regional_development_fund_horizontal.jpg" width="350" height="200" alt="European Union European Regional Development Fund"/>
+
 # GovSSO Mock
 
 GovSSO mock is an application that serves [GovSSO protocol](https://e-gov.github.io/GOVSSO/TechnicalSpecification) to
