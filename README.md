@@ -10,8 +10,9 @@ clients. Its main use cases are:
   (`govsso-demo.ria.ee`), mock can return arbitrary user data to client application and is also simpler to use with
   automated tests.
 
-GovSSO mock returns protocol-compliant responses for all successful flows, currently validates most conditions on input
-data and allows to simulate many error conditions.
+GovSSO mock returns protocol-compliant responses for all successful flows and allows to simulate many error conditions.
+NB! GovSSO mock currently validates most conditions on input data, therefore not all validations in GovSSO mock are
+currently as strict as in GovSSO environment.
 
 ## Documentation
 
