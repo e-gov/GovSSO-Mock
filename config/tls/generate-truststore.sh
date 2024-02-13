@@ -1,4 +1,5 @@
 #!/bin/bash
+set -eu
 
 environment=$1
 if [ -z "$environment" ]; then
@@ -18,21 +19,18 @@ if [ -z "$application" ]; then
   exit 1
 fi
 
-filename=$4
-if [ -z "$filename" ]; then
-  filename="$application.$environment.truststore.p12"
-fi
+basedir=$(dirname "$0")
+truststoreFile="${basedir}/$application/$application.$environment.truststore.p12"
+caCertificateFile="${basedir}/$ca/$ca.$environment.crt.pem"
 
-echo "--------------------------- Generating truststore for '$application.$environment'"
-
-# Remove application existing truststore
-rm -f "$application/$filename"
-
-# Generate truststore with CA certificate for application
-keytool -noprompt \
-  -importcert \
-  -alias "$ca.$environment" \
-  -file "$ca/$ca.$environment.crt" \
-  -storepass changeit \
-  -storetype pkcs12 \
-  -keystore "$application/$filename"
+[[ -f "${truststoreFile}" ]] || {
+  echo "--------------------------- Generating truststore for '$application.$environment'"
+  keytool -noprompt \
+    -importcert \
+    -alias "$ca.$environment" \
+    -file "${caCertificateFile}" \
+    -storepass changeit \
+    -storetype pkcs12 \
+    -keystore "${truststoreFile}"
+  chmod 644 "${truststoreFile}"
+}

@@ -1,12 +1,24 @@
 #!/bin/bash
+set -eu
 
-echo "--------------------------- Generating RSA public and private key pair for signing identity tokens"
+basedir=$(dirname "$0")
+privateKeyFile="${basedir}/id-token-sign.key.pem"
+publicKeyFile="${basedir}/id-token-sign.pub.pem"
 
-openssl genrsa \
-  -out idTokenSign.key \
+[[ -f "${privateKeyFile}" ]] || {
+  echo "--------------------------- Generating RSA public and private key pair for signing identity tokens"
+  openssl genrsa \
+  -out "${privateKeyFile}" \
   -traditional \
   4096
+  chmod 644 "${privateKeyFile}"
+}
 
-openssl rsa \
-  -in idTokenSign.key \
-  -pubout > idTokenSign.pub
+[[ -f "${publicKeyFile}" ]] || {
+  echo "--------------------------- Writing RSA public key for signing identity tokens"
+  openssl rsa \
+    -in "${privateKeyFile}" \
+    -pubout \
+    -out "${publicKeyFile}"
+  chmod 644 "${publicKeyFile}"
+}

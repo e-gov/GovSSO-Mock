@@ -1,14 +1,8 @@
 #!/bin/bash
 set -eu
 
-cd tls
-bash generate-tls-resources.sh
+basedir=$(dirname "$0")
+bash "${basedir}/id-token/generate-id-token-signing-keys.sh"
+bash "${basedir}/tls/generate-tls-resources.sh"
 
-cd ../id-token
-bash generate-id-token-signing-keys.sh
-
-echo "--------------------------- All resources generated"
-
-# Prevents script window to be closed after completion
-echo -e "\nPress any key to exit the script."
-read -rn1
+# TODO: Find a better solution than calling chmod everywhere.

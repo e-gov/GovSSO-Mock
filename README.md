@@ -16,6 +16,13 @@ GovSSO mock returns protocol-compliant responses for all successful flows and al
 NB! GovSSO mock currently validates most conditions on input data, therefore not all validations in GovSSO mock are
 currently as strict as in GovSSO environment.
 
+## Quick start
+
+1. Run `docker compose up`.
+2. Open https://client.localhost:11443/ to test authentication, session update and logout flows;
+   open https://govsso-mock.localhost:10443/ to test back-channel logout request. Refer to documentation below for more
+   detailed instructions.
+
 ## Documentation
 
 * [DEPLOYMENT.md](DEPLOYMENT.md) – guide for building, running, and configuring GovSSO mock.

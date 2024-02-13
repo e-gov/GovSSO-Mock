@@ -1,11 +1,19 @@
-version: '3'
-
 services:
+
+  setup:
+    image: eclipse-temurin:17
+    command: bash /config/generate-resources.sh
+    volumes:
+      - ./config:/config:rw
+
   govsso-mock:
     build:
       context: .
       dockerfile: build/Dockerfile
     image: govsso-mock
+    depends_on:
+      setup:
+        condition: service_completed_successfully
     networks:
       default:
         aliases:
@@ -32,11 +40,11 @@ services:
       - govsso.redirect-uri=https://client.localhost:11443/login/oauth2/code/govsso
       - govsso.post-logout-redirect-uri=https://client.localhost:11443/?show-post-logout-message
       - govsso.issuer-uri=https://govsso-mock.localhost:10443/
-      - govsso.trust-store=file:/var/certs/client.localhost.truststore.p12
+      - govsso.trust-store=file:/var/local/config/tls/client/client.localhost.truststore.p12
       - govsso.trust-store-password=changeit
       - example-client.logo=client-a.svg
       - server.ssl.key-store-type=PKCS12
-      - server.ssl.key-store=/var/certs/client.localhost.keystore.p12
+      - server.ssl.key-store=/var/local/config/tls/client/client.localhost.keystore.p12
       - server.ssl.key-store-password=changeit
       - BPL_JVM_THREAD_COUNT=10
     networks:
@@ -47,5 +55,5 @@ services:
       - '11443:11443'
     restart: unless-stopped
     volumes:
-      - ./config/tls/client/client.localhost.keystore.p12:/var/certs/client.localhost.keystore.p12:ro
-      - ./config/tls/client/client.localhost.truststore.p12:/var/certs/client.localhost.truststore.p12:ro
+      # Cannot use more specific folder/files, because client container is created before setup container run is completed.
+      - ./config/tls:/var/local/config/tls:ro

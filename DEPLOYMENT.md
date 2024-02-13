@@ -18,12 +18,11 @@
    docker compose -f C:/path/to/GOVSSO-Mock/docker-compose.yml build
    ```
 2. Run the following command to generate keypairs and certificates for mock and example client (replace
-   `C:/path/to/GOVSSO-Mock` part with absolute path of the cloned GOVSSO-Mock repository folder in your filesystem;
-   MSYS_NO_PATHCONV=1 is only needed when using Git Bash shell on Windows, remove it when using PowerShell, Windows
-   command prompt or Linux/Mac; remove --user when using Windows):
+   `C:/path/to/GOVSSO-Mock` part with absolute path of the cloned GOVSSO-Mock repository folder in your filesystem):
    ```shell
-   MSYS_NO_PATHCONV=1 docker run --rm --user $(id -u):$(id -g) -v C:/path/to/GOVSSO-Mock/config:/config -w /config eclipse-temurin:17 bash generate-resources.sh
+   docker compose -f C:/path/to/GOVSSO-Mock/docker-compose.yml up setup
    ```
+   Running it multiple times will not overwrite already created files.
 
 ## Running
 
@@ -32,9 +31,7 @@ Default deployment is provided with Docker Compose, using domain names client.lo
 <img src="doc/deployment-docker_compose.png" width="700"/>
 
 1. Run the following command to run Docker images of mock and example client with Docker Compose (replace
-   `C:/path/to/GOVSSO-Mock` part with absolute path of the cloned GOVSSO-Mock repository folder in your filesystem);
-   note that Docker Compose command is `docker compose` in newer Docker Compose versions and `docker-compose` in older
-   Docker Compose versions:
+   `C:/path/to/GOVSSO-Mock` part with absolute path of the cloned GOVSSO-Mock repository folder in your filesystem):
    ```shell
    docker compose -f C:/path/to/GOVSSO-Mock/docker-compose.yml up
    ```
