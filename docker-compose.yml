@@ -24,7 +24,7 @@ services:
       - ./config:/govsso-mock/config:ro
 
   client:
-    image: ghcr.io/e-gov/govsso-client:0.6.1
+    image: ghcr.io/e-gov/govsso-client:0.7.2
     entrypoint: bash -c 'sleep 5 && /cnb/process/web'
     depends_on:
       - govsso-mock
@@ -34,7 +34,6 @@ services:
           memory: 650M
     environment:
       - server.port=11443
-      - spring.application.name=Client
       - govsso.client-id=example-client-id
       - govsso.client-secret=secret-a
       - govsso.redirect-uri=https://client.localhost:11443/login/oauth2/code/govsso
@@ -42,11 +41,12 @@ services:
       - govsso.issuer-uri=https://govsso-mock.localhost:10443/
       - govsso.trust-store=file:/var/local/config/tls/client/client.localhost.truststore.p12
       - govsso.trust-store-password=changeit
-      - example-client.logo=client-a.svg
+      - example-client.messages.title=GovSSO Client (LOCAL)
       - server.ssl.key-store-type=PKCS12
       - server.ssl.key-store=/var/local/config/tls/client/client.localhost.keystore.p12
       - server.ssl.key-store-password=changeit
       - BPL_JVM_THREAD_COUNT=10
+      - SPRING_PROFILES_ACTIVE=govsso
     networks:
       default:
         aliases:
