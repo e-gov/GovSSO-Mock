@@ -25,7 +25,7 @@ built on Gin web framework and uses the following libraries for implementing mai
 * Bootstrap – for having a consistent UI style.
 
 GovSSO example client setup in Docker Compose, keypair and TLS certificate generation scripts are based on open-source
-[GOVSSO-Session repository](https://github.com/e-gov/GOVSSO-Session). GOVSSO-Session repository’s Docker Compose setup
+[GovSSO-Session repository](https://github.com/e-gov/GovSSO-Session). GovSSO-Session repository’s Docker Compose setup
 currently uses *.localhost domain names for default deployment, because these are supported out-of-the-box by major
 browsers without needing to modify hosts file on user’s computer.
 
