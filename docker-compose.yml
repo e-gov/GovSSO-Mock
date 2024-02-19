@@ -24,7 +24,7 @@ services:
       - ./config:/govsso-mock/config:ro
 
   client:
-    image: ghcr.io/e-gov/govsso-client:0.7.2
+    image: ghcr.io/e-gov/tara-govsso-exampleclient:0.7.2
     # TODO add HEALTHCHECK to mock's Dockerfile and replace sleep with depends_on.govsso-mock.condition: service_healthy
     entrypoint: bash -c 'sleep 5 && /cnb/process/web'
     depends_on:
