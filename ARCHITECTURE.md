@@ -3,14 +3,14 @@
 GovSSO mock is implemented in Go programming language, which was chosen for the following reasons:
 
 * Go ecosystem has well-maintained libraries and frameworks to implement GovSSO mock functionality.
-* Go program’s small memory footprint and fast startup time enables convenient deployment of GovSSO mock in different
+* Go program's small memory footprint and fast startup time enables convenient deployment of GovSSO mock in different
   development and test environments, some of which may have significant resource constraints.
-* [Go’s increasing popularity](https://survey.stackoverflow.co/2022/#technology-most-popular-technologies) helps to
+* [Go's increasing popularity](https://survey.stackoverflow.co/2022/#technology-most-popular-technologies) helps to
   attract developers to amend GovSSO mock codebase in the future.
 
 GovSSO mock makes a simplification compared to real GovSSO service: mock stores working state only in memory, which is
 lost with mock restart. Therefore, if mock is restarted when a client application flow is in progress, the flow breaks
-and needs to be started over. GovSSO mock doesn’t depend on any external services nor doesn’t write to any files on
+and needs to be started over. GovSSO mock doesn't depend on any external services nor doesn't write to any files on
 disk, it logs messages to console by default.
 
 GovSSO mock is built and tested with Go 1.19 (which was latest version as of this writing in 2022-09-06), although it
@@ -25,11 +25,11 @@ built on Gin web framework and uses the following libraries for implementing mai
 * Bootstrap – for having a consistent UI style.
 
 GovSSO example client setup in Docker Compose, keypair and TLS certificate generation scripts are based on open-source
-[GovSSO-Session repository](https://github.com/e-gov/GovSSO-Session). GovSSO-Session repository’s Docker Compose setup
+[GovSSO-Session repository](https://github.com/e-gov/GovSSO-Session). GovSSO-Session repository's Docker Compose setup
 currently uses *.localhost domain names for default deployment, because these are supported out-of-the-box by major
-browsers without needing to modify hosts file on user’s computer.
+browsers without needing to modify hosts file on user's computer.
 
-GovSSO mock serves only HTTPS and doesn’t have an option to serve plain HTTP, because this corresponds to real GovSSO
+GovSSO mock serves only HTTPS and doesn't have an option to serve plain HTTP, because this corresponds to real GovSSO
 service and forces integrating client applications to correctly use TLS from the start.
 
 GovSSO mock serves additional HTTP response headers analogous to real GovSSO service:
@@ -44,7 +44,7 @@ GovSSO mock serves additional HTTP response headers analogous to real GovSSO ser
 * Validate more conditions on input data.
 * Simulate more error conditions.
     * Issue different HTTP status codes.
-    * Issue TLS certificates that don’t pass different security checks.
+    * Issue TLS certificates that don't pass different security checks.
 * Enable grouping of preconfigured users and add an additional information field to preconfigured users. Useful when
   client application testing requires preconfiguring tens or hundreds of users which currently becomes a long list in
   mock UI where a specific user is difficult or slow to find).

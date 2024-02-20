@@ -49,8 +49,8 @@ Default deployment is provided with Docker Compose, using domain names client.lo
     * tlsPrivateKey – path to TLS private key file (in PEM format) for mock application;
     * idTokenSignPrivateKeyPath – path to private key file (in PEM format) that is used for signing ID Token and Logout
       Token;
-    * idTokenSignPublicKeyPath – path to public key file (in PEM format) that is served at mock’s JWKS endpoint;
-    * idTokenSignKeyId – `kid` value that is served at mock’s JWKS endpoint.
+    * idTokenSignPublicKeyPath – path to public key file (in PEM format) that is served at mock's JWKS endpoint;
+    * idTokenSignKeyId – `kid` value that is served at mock's JWKS endpoint.
 * config/users.json – contains a JSON array of preconfigured users for conveniently selecting on mock authentication
   page; for each user there is a JSON object with the following properties:
     * sub – data that is used as sub-claim value in issued ID Token;
@@ -63,7 +63,7 @@ Default deployment is provided with Docker Compose, using domain names client.lo
 * config/clients.json - contains a JSON array of preconfigured client application for conveniently selecting on mock
   back-channel logout page; for each client application there is a JSON object with the following properties:
     * client_id – data that is used as aud claim value in issued Logout Token;
-    * backchannel_logout_uri – client application’s endpoint URL where client application accepts back-channel logout
+    * backchannel_logout_uri – client application's endpoint URL where client application accepts back-channel logout
       requests;
     * redirect_uris - list of client application's redirect URLs where client application accepts authorization
       callbacks;
