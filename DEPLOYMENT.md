@@ -26,7 +26,7 @@
 
 ## Running
 
-Default deployment is provided with Docker Compose, using domain names client.localhost and govsso-mock.localhost
+Default deployment is provided with Docker Compose, using domain names `client.localhost` and `govsso-mock.localhost`.
 
 <img src="doc/deployment-docker_compose.png" width="700"/>
 
@@ -41,31 +41,31 @@ Default deployment is provided with Docker Compose, using domain names client.lo
 
 ## Configuration
 
-* config/config.json – global configuration:
-    * host – domain name where mock application is served;
-    * serverPort – TCP port where mock application is served;
-    * baseHref – HTTP path where mock application is served;
-    * tlsCertificate – path to TLS certificate file (in PEM format) for mock application;
-    * tlsPrivateKey – path to TLS private key file (in PEM format) for mock application;
-    * idTokenSignPrivateKeyPath – path to private key file (in PEM format) that is used for signing ID Token and Logout
+* `config/config.json` – global configuration:
+    * `host` – domain name where mock application is served;
+    * `serverPort` – TCP port where mock application is served;
+    * `baseHref` – HTTP path where mock application is served;
+    * `tlsCertificate` – path to TLS certificate file (in PEM format) for mock application;
+    * `tlsPrivateKey` – path to TLS private key file (in PEM format) for mock application;
+    * `idTokenSignPrivateKeyPath` – path to private key file (in PEM format) that is used for signing ID Token and Logout
       Token;
-    * idTokenSignPublicKeyPath – path to public key file (in PEM format) that is served at mock's JWKS endpoint;
-    * idTokenSignKeyId – `kid` value that is served at mock's JWKS endpoint.
-* config/users.json – contains a JSON array of preconfigured users for conveniently selecting on mock authentication
+    * `idTokenSignPublicKeyPath` – path to public key file (in PEM format) that is served at mock's JWKS endpoint;
+    * `idTokenSignKeyId` – `kid` value that is served at mock's JWKS endpoint.
+* `config/users.json` – contains a JSON array of preconfigured users for conveniently selecting on mock authentication
   page; for each user there is a JSON object with the following properties:
-    * sub – data that is used as sub-claim value in issued ID Token;
-    * given_name – data that is used as given_name claim value in issued ID Token;
-    * family_name – data that is used as family_name claim value in issued ID Token;
-    * birthdate – data that is used as birthdate claim value in issued ID Token;
-    * amr – data that is used as amr claim value in issued ID Token;
-    * acr – data that is used as acr claim value in issued ID Token;
-    * phone_number - data that is used as phone_number claim value in issued ID Token.
-* config/clients.json - contains a JSON array of preconfigured client application for conveniently selecting on mock
+    * `sub` – data that is used as `sub` claim value in issued ID Token;
+    * `given_name` – data that is used as `given_name` claim value in issued ID Token;
+    * `family_name` – data that is used as `family_name` claim value in issued ID Token;
+    * `birthdate` – data that is used as `birthdate` claim value in issued ID Token;
+    * `amr` – data that is used as `amr` claim value in issued ID Token;
+    * `acr` – data that is used as `acr` claim value in issued ID Token;
+    * `phone_number` - data that is used as `phone_number` claim value in issued ID Token.
+* `config/clients.json` - contains a JSON array of preconfigured client application for conveniently selecting on mock
   back-channel logout page; for each client application there is a JSON object with the following properties:
-    * client_id – data that is used as aud claim value in issued Logout Token;
-    * backchannel_logout_uri – client application's endpoint URL where client application accepts back-channel logout
+    * `client_id` – data that is used as `aud` claim value in issued Logout Token;
+    * `backchannel_logout_uri` – client application's endpoint URL where client application accepts back-channel logout
       requests;
-    * redirect_uris - list of client application's redirect URLs where client application accepts authorization
+    * `redirect_uris` - list of client application's redirect URLs where client application accepts authorization
       callbacks;
-    * post_logout_redirect_uris - list of client application's redirect URLs where client application accepts logout
+    * `post_logout_redirect_uris` - list of client application's redirect URLs where client application accepts logout
       callbacks.

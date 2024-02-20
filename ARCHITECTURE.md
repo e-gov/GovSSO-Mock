@@ -18,7 +18,7 @@ may work with older versions as newer language features may not yet have been us
 built on Gin web framework and uses the following libraries for implementing main functionality:
 
 * go-jose – for creating and parsing JWT-s;
-* uuid – for generating UUID values for sid and jti claims;
+* uuid – for generating UUID values for `sid` and `jti` claims;
 * jwx – for producing JWKS endpoint output;
 * zerolog – for logging;
 * validator - for validating requests;
@@ -26,7 +26,7 @@ built on Gin web framework and uses the following libraries for implementing mai
 
 GovSSO example client setup in Docker Compose, keypair and TLS certificate generation scripts are based on open-source
 [GovSSO-Session repository](https://github.com/e-gov/GovSSO-Session). GovSSO-Session repository's Docker Compose setup
-currently uses *.localhost domain names for default deployment, because these are supported out-of-the-box by major
+currently uses `*.localhost` domain names for default deployment, because these are supported out-of-the-box by major
 browsers without needing to modify hosts file on user's computer.
 
 GovSSO mock serves only HTTPS and doesn't have an option to serve plain HTTP, because this corresponds to real GovSSO
