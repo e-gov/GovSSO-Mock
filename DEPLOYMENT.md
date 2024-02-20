@@ -12,8 +12,7 @@
 ## Building
 
 1. Run the following command to build Docker image of mock (replace `C:/path/to/GOVSSO-Mock` part with absolute path of
-   the cloned GOVSSO-Mock repository folder in your filesystem); note that Docker Compose command is `docker compose` in
-   newer Docker Compose versions and `docker-compose` in older Docker Compose versions:
+   the cloned GOVSSO-Mock repository folder in your filesystem):
    ```shell
    docker compose -f C:/path/to/GOVSSO-Mock/docker-compose.yml build
    ```
