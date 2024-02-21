@@ -9,7 +9,7 @@ clients. Its main use cases are:
   environment (`govsso-demo.ria.ee`), mock can be used without needing registration with RIA and can also be used
   offline or in closed networks.
 * Provide mock authentication data in development and test environments. Compared to GovSSO service demo environment
-  (`govsso-demo.ria.ee`), mock can return arbitrary user data to client application and is also simpler to use with
+  (`govsso-demo.ria.ee`), mock can return arbitrary user data to client applications and is also simpler to use with
   automated tests.
 
 GovSSO mock returns protocol-compliant responses for all successful flows and allows to simulate many error conditions.
@@ -20,8 +20,8 @@ currently as strict as in GovSSO environment.
 
 1. Run `docker compose up`.
 2. Open https://client.localhost:11443/ to test authentication, session update and logout flows;
-   open https://govsso-mock.localhost:10443/ to test back-channel logout request. Refer to documentation below for more
-   detailed instructions.
+   open https://govsso-mock.localhost:10443/ to test back-channel logout requests. Refer to the documentation below for
+   more detailed instructions.
 
 ## Documentation
 
