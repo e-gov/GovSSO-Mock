@@ -6,20 +6,20 @@
    these). Refer to https://docs.docker.com/engine/install/ and https://docs.docker.com/compose/install/ for further
    instructions.
 2. Clone the content of this GovSSO mock repository, either by running
-   `git clone https://github.com/e-gov/GOVSSO-Mock.git` (requires Git to be installed) or by downloading
-   https://github.com/e-gov/GOVSSO-Mock/archive/refs/heads/master.zip and unpacking it.
+   `git clone https://github.com/e-gov/GovSSO-Mock.git` (requires Git to be installed) or by downloading
+   https://github.com/e-gov/GovSSO-Mock/archive/refs/heads/master.zip and unpacking it.
 
 ## Building
 
-1. Run the following command to build a Docker image of mock (replace `C:/path/to/GOVSSO-Mock` part with the absolute
-   path of the cloned GOVSSO-Mock repository folder in your filesystem):
+1. Run the following command to build a Docker image of mock (replace `C:/path/to/GovSSO-Mock` part with the absolute
+   path of the cloned GovSSO-Mock repository folder in your filesystem):
    ```shell
-   docker compose -f C:/path/to/GOVSSO-Mock/docker-compose.yml build
+   docker compose -f C:/path/to/GovSSO-Mock/docker-compose.yml build
    ```
 2. Run the following command to generate key pairs and certificates for mock and example client (replace
-   `C:/path/to/GOVSSO-Mock` part with the absolute path of the cloned GOVSSO-Mock repository folder in your filesystem):
+   `C:/path/to/GovSSO-Mock` part with the absolute path of the cloned GovSSO-Mock repository folder in your filesystem):
    ```shell
-   docker compose -f C:/path/to/GOVSSO-Mock/docker-compose.yml up setup
+   docker compose -f C:/path/to/GovSSO-Mock/docker-compose.yml up setup
    ```
    Running it multiple times will not overwrite already created files.
 
@@ -30,9 +30,9 @@ Default deployment is provided with Docker Compose, using domain names `client.l
 <img src="doc/deployment-docker_compose.png" width="700"/>
 
 1. Run the following command to create and run Docker containers of mock and example client with Docker Compose (replace
-   `C:/path/to/GOVSSO-Mock` part with the absolute path of the cloned GOVSSO-Mock repository folder in your filesystem):
+   `C:/path/to/GovSSO-Mock` part with the absolute path of the cloned GovSSO-Mock repository folder in your filesystem):
    ```shell
-   docker compose -f C:/path/to/GOVSSO-Mock/docker-compose.yml up
+   docker compose -f C:/path/to/GovSSO-Mock/docker-compose.yml up
    ```
 2. Open https://client.localhost:11443/ to test authentication, session update and logout flows; open
    https://govsso-mock.localhost:10443/ to test back-channel logout requests. Refer to [USAGE.md](USAGE.md) for more

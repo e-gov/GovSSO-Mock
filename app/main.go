@@ -1,8 +1,8 @@
 package main
 
 import (
-	"GOVSSO-Mock/app/idtoken"
-	"GOVSSO-Mock/app/json"
+	"GovSSO-Mock/app/idtoken"
+	"GovSSO-Mock/app/json"
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/pem"

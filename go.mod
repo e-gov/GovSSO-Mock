@@ -1,4 +1,4 @@
-module GOVSSO-Mock
+module GovSSO-Mock
 
 go 1.19
 

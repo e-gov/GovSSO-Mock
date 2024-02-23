@@ -1,7 +1,7 @@
 package main
 
 import (
-	"GOVSSO-Mock/app/idtoken"
+	"GovSSO-Mock/app/idtoken"
 	"crypto/rsa"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
