@@ -36,7 +36,7 @@ certificateFile="${basedir}/$caFullName/$caFullName.$environment.crt.pem"
   openssl req \
     -x509 \
     -new \
-    -sha512 \
+    -sha256 \
     -nodes \
     -key "${privateKeyFile}" \
     -days 365 \

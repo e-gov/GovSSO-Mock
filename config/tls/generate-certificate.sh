@@ -45,7 +45,7 @@ keystoreFile="${basedir}/$applicationName/$host.keystore.p12"
   MSYS_NO_PATHCONV=1 \
   openssl req \
     -new \
-    -sha512 \
+    -sha256 \
     -nodes \
     -key "${privateKeyFile}" \
     -subj "/CN=$host" \
@@ -59,7 +59,7 @@ keystoreFile="${basedir}/$applicationName/$host.keystore.p12"
   export SAN="DNS:$host"
   openssl x509 \
     -req \
-    -sha512 \
+    -sha256 \
     -in "${requestFile}" \
     -CA "${caCertificateFile}" \
     -CAkey "${caPrivateKeyFile}" \
